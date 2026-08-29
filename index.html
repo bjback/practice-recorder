@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Practice Recorder</title>
+<style>
+  :root {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color-scheme: light dark;
+  }
+  body {
+    margin: 0;
+    background: Canvas;
+    color: CanvasText;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+  h1 { margin-bottom: 6px; }
+  .sub { opacity: .75; margin-top: 0; }
+  .card {
+    border: 1px solid color-mix(in srgb, CanvasText 20%, transparent);
+    border-radius: 14px;
+    padding: 16px;
+    margin: 14px 0;
+    background: color-mix(in srgb, Canvas 96%, CanvasText 4%);
+  }
+  label {
+    display:block;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  input[type=file] { width:100%; }
+  button {
+    font: inherit;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
+    cursor: pointer;
+    min-height: 46px;
+  }
+  button.primary {
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+  }
+  .row {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .row > * { flex:1 1 160px; }
+  .status {
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  .small {
+    font-size: .92rem;
+    opacity: .78;
+  }
+  .sliderRow {
+    display:grid;
+    grid-template-columns: 130px 1fr 52px;
+    gap:10px;
+    align-items:center;
+    margin:10px 0;
+  }
+  input[type=range] { width:100%; }
+  .align {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, CanvasText 10%, transparent);
+    min-width: 86px;
+    text-align:center;
+    font-variant-numeric: tabular-nums;
+  }
+  .hidden { display:none !important; }
+  .warning {
+    border-left: 4px solid currentColor;
+    padding-left: 12px;
+  }
+
+    /* Mobile / earbuds version */
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      max-width: 720px;
+      margin: 0 auto;
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+      padding-top: max(16px, env(safe-area-inset-top));
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+    button, input[type="file"] {
+      min-height: 48px;
+    }
+    button {
+      touch-action: manipulation;
+      font-size: 1rem;
+    }
+    input[type="range"] {
+      width: 100%;
+      min-height: 40px;
+    }
+    .mobile-tip {
+      border: 1px solid #bbb;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 12px 0 18px;
+      background: rgba(127,127,127,0.06);
+    }
+    .mobile-status {
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.55rem; }
+      h2 { font-size: 1.2rem; }
+      .row, .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .row > *, .controls > * {
+        flex: 1 1 140px;
+      }
+      button {
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Practice Recorder <span class="small">prototype</span></h1>
+  <div class="mobile-tip">
+    <b>Phone + earbuds test</b>
+    <div class="small" style="margin-top:6px;">
+      Connect wired or Bluetooth earbuds before recording. Keep the phone volume at a comfortable level.
+      The backing track should play through the earbuds while the phone microphone records your voice.
+      If your earbuds have a microphone, the phone may use that mic instead of the phone's built-in mic.
+    </div>
+    <div id="mobileStatus" class="mobile-status small">Ready for mobile test.</div>
+  </div>
+
+  <p class="sub">Sing against one learning track, then compare your recording with your part.</p>
+
+  <div class="card">
+    <label for="againstFile">1. Track to sing against</label>
+    <input id="againstFile" type="file" accept="audio/*" />
+    <p class="small">Usually your “part missing” track.</p>
+  </div>
+
+  <div class="card">
+    <label for="compareFile">2. Track to compare with</label>
+    <input id="compareFile" type="file" accept="audio/*" />
+    <p class="small">Usually your solo or predominant-part track.</p>
+  </div>
+
+  <div class="card warning">
+    <strong>Use earbuds or headphones.</strong>
+    <p class="small">This keeps the learning track out of the microphone recording as much as possible.</p>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <button id="recordBtn" class="primary" disabled>● Record</button>
+      <button id="stopBtn" disabled>■ Stop</button>
+    </div>
+    <div id="status" class="status">Choose both audio files to begin.</div>
+    <p class="small">Your recording stays on this device and is not uploaded anywhere.</p>
+  </div>
+
+  <div id="compareCard" class="card hidden">
+    <h2>Compare</h2>
+
+    <div class="row">
+      <button id="compareBtn" class="primary">▶ Compare</button>
+      <button id="stopCompareBtn" disabled>■ Stop</button>
+      <button id="recordAgainBtn">↻ Record Again</button>
+    </div>
+
+    <div class="sliderRow">
+      <span>My voice</span>
+      <input id="voiceVol" type="range" min="0" max="1.5" step="0.05" value="1" />
+      <span id="voiceVal">100%</span>
+    </div>
+
+    <div class="sliderRow">
+      <span>Reference</span>
+      <input id="refVol" type="range" min="0" max="1.5" step="0.05" value="1" />
+      <span id="refVal">100%</span>
+    </div>
+
+    <div class="align">
+      <strong>Voice timing</strong>
+      <button id="earlier100Btn">← 100 ms</button>
+      <button id="earlier20Btn">← 20 ms</button>
+      <span id="offsetVal" class="pill">0 ms</span>
+      <button id="later20Btn">20 ms →</button>
+      <button id="later100Btn">100 ms →</button>
+      <button id="resetAlignBtn">Reset</button>
+    </div>
+
+    <div class="sliderRow">
+      <span>Timing</span>
+      <input id="alignSlider" type="range" min="-5000" max="5000" step="20" value="0" />
+      <span></span>
+    </div>
+
+    <p class="small">
+      If your voice sounds <b>late</b>, move it <b>Earlier</b> (negative numbers).
+      If it sounds early, move it Later. Changes take effect immediately while Compare is playing.
+    </p>
+
+    <label style="font-weight:600; margin-top:12px;">
+      <input id="rememberTiming" type="checkbox" checked />
+      Remember this timing correction on this device
+    </label>
+    <p id="savedTimingNote" class="small"></p>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary><strong>How it works</strong></summary>
+      <p class="small">
+        During recording, the first track plays while your microphone records your voice.
+        During comparison, your recording and the second track are played together.
+        The Voice Timing controls shift your recording relative to the reference, changes are heard immediately during comparison, and the chosen timing can be remembered automatically on this device.
+      </p>
+    </details>
+  </div>
+</div>
+
+<script>
+(() => {
+  const againstFile = document.getElementById('againstFile');
+  const compareFile = document.getElementById('compareFile');
+  const recordBtn = document.getElementById('recordBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const status = document.getElementById('status');
+  const compareCard = document.getElementById('compareCard');
+  const compareBtn = document.getElementById('compareBtn');
+  const stopCompareBtn = document.getElementById('stopCompareBtn');
+  const recordAgainBtn = document.getElementById('recordAgainBtn');
+  const voiceVol = document.getElementById('voiceVol');
+  const refVol = document.getElementById('refVol');
+  const voiceVal = document.getElementById('voiceVal');
+  const refVal = document.getElementById('refVal');
+  const earlier100Btn = document.getElementById('earlier100Btn');
+  const earlier20Btn = document.getElementById('earlier20Btn');
+  const later20Btn = document.getElementById('later20Btn');
+  const later100Btn = document.getElementById('later100Btn');
+  const resetAlignBtn = document.getElementById('resetAlignBtn');
+  const alignSlider = document.getElementById('alignSlider');
+  const offsetVal = document.getElementById('offsetVal');
+  const rememberTiming = document.getElementById('rememberTiming');
+  const savedTimingNote = document.getElementById('savedTimingNote');
+  const mobileStatus = document.getElementById('mobileStatus');
+
+  let audioCtx = null;
+  let againstBuffer = null;
+  let compareBuffer = null;
+  let recordedBuffer = null;
+  let recordedBlob = null;
+
+  let mediaRecorder = null;
+  let micStream = null;
+  let chunks = [];
+  let againstSource = null;
+
+  let compareSources = [];
+  let compareStartTime = 0;       // AudioContext time when current comparison segment started
+  let compareReferenceOffset = 0; // Reference-track position used for current segment
+  let comparisonPlaying = false;
+    releaseWakeLock();
+  let playbackGeneration = 0;
+
+  // Positive = voice later than reference. Negative = voice earlier than reference.
+  let voiceOffsetSec = 0;
+  const TIMING_STORAGE_KEY = 'practiceRecorderVoiceOffsetMs';
+
+  let wakeLock = null;
+
+  async function requestWakeLock() {
+    try {
+      if ('wakeLock' in navigator && document.visibilityState === 'visible') {
+        wakeLock = await navigator.wakeLock.request('screen');
+      }
+    } catch (_) {}
+  }
+
+  async function releaseWakeLock() {
+    try {
+      if (wakeLock) await wakeLock.release();
+    } catch (_) {}
+    wakeLock = null;
+  }
+
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'visible' && (mediaRecorder?.state === 'recording' || comparisonPlaying)) {
+      await requestWakeLock();
+    }
+  });
+
+  if (mobileStatus) {
+    const ua = navigator.userAgent || '';
+    if (/iPhone|iPad|iPod/i.test(ua)) {
+      mobileStatus.textContent = 'iPhone/iPad detected. Use Safari and allow microphone access when asked.';
+    } else if (/Android/i.test(ua)) {
+      mobileStatus.textContent = 'Android detected. Use Chrome and allow microphone access when asked.';
+    }
+  }
+
+
+  function loadSavedTiming() {
+    try {
+      const saved = localStorage.getItem(TIMING_STORAGE_KEY);
+      if (saved !== null && saved !== '') {
+        const ms = Number(saved);
+        if (Number.isFinite(ms)) {
+          voiceOffsetSec = Math.max(-5, Math.min(5, ms / 1000));
+          savedTimingNote.textContent = `Saved timing correction: ${ms > 0 ? '+' : ''}${Math.round(ms)} ms`;
+        }
+      } else {
+        savedTimingNote.textContent = 'No saved timing correction yet.';
+      }
+    } catch (_) {
+      savedTimingNote.textContent = 'Timing correction cannot be saved in this browser mode.';
+    }
+  }
+
+  function saveTimingIfEnabled() {
+    try {
+      if (rememberTiming.checked) {
+        const ms = Math.round(voiceOffsetSec * 1000);
+        localStorage.setItem(TIMING_STORAGE_KEY, String(ms));
+        savedTimingNote.textContent = `Saved timing correction: ${ms > 0 ? '+' : ''}${ms} ms`;
+      }
+    } catch (_) {}
+  }
+
+  function updateReady() {
+    recordBtn.disabled = !(againstBuffer && compareBuffer);
+    if (recordBtn.disabled) status.textContent = 'Choose both audio files to begin.';
+    else status.textContent = 'Ready to record.';
+  }
+
+  async function ensureContext() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+  }
+
+  async function fileToAudioBuffer(file) {
+    await ensureContext();
+    const arr = await file.arrayBuffer();
+    return await audioCtx.decodeAudioData(arr.slice(0));
+  }
+
+  againstFile.addEventListener('change', async () => {
+    if (!againstFile.files[0]) return;
+    status.textContent = 'Loading sing-against track…';
+    try {
+      againstBuffer = await fileToAudioBuffer(againstFile.files[0]);
+      updateReady();
+    } catch (e) {
+      console.error(e);
+      status.textContent = 'Could not load the first audio file.';
+    }
+  });
+
+  compareFile.addEventListener('change', async () => {
+    if (!compareFile.files[0]) return;
+    status.textContent = 'Loading comparison track…';
+    try {
+      compareBuffer = await fileToAudioBuffer(compareFile.files[0]);
+      updateReady();
+    } catch (e) {
+      console.error(e);
+      status.textContent = 'Could not load the comparison audio file.';
+    }
+  });
+
+  async function startRecording() {
+    await ensureContext();
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+      alert('This browser does not support the recording features this prototype needs.');
+      return;
+    }
+
+    try {
+      micStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false
+        }
+      });
+
+      chunks = [];
+      mediaRecorder = new MediaRecorder(micStream);
+      mediaRecorder.ondataavailable = e => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+      mediaRecorder.onstop = finishRecording;
+
+      mediaRecorder.start();
+    requestWakeLock();
+
+      againstSource = audioCtx.createBufferSource();
+      againstSource.buffer = againstBuffer;
+      againstSource.connect(audioCtx.destination);
+
+      // Small scheduling delay helps both events begin consistently.
+      const t = audioCtx.currentTime + 0.12;
+      againstSource.start(t);
+
+      recordBtn.disabled = true;
+      stopBtn.disabled = false;
+      againstFile.disabled = true;
+      compareFile.disabled = true;
+      status.textContent = 'Recording… sing your part now.';
+    } catch (err) {
+      console.error(err);
+      status.textContent = 'Microphone permission was not granted or recording could not start.';
+    }
+  }
+
+  function stopRecording() {
+    try {
+      if (againstSource) againstSource.stop();
+    } catch (_) {}
+    againstSource = null;
+
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    releaseWakeLock();
+    }
+    stopBtn.disabled = true;
+    status.textContent = 'Processing your recording…';
+  }
+
+  async function finishRecording() {
+    if (micStream) {
+      micStream.getTracks().forEach(t => t.stop());
+      micStream = null;
+    }
+
+    try {
+      recordedBlob = new Blob(chunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+      const arr = await recordedBlob.arrayBuffer();
+      recordedBuffer = await audioCtx.decodeAudioData(arr.slice(0));
+      compareCard.classList.remove('hidden');
+      status.textContent = 'Recording complete. Tap Compare.';
+      recordBtn.disabled = false;
+      againstFile.disabled = false;
+      compareFile.disabled = false;
+    } catch (e) {
+      console.error(e);
+      status.textContent = 'The recording was made, but this browser could not decode it for comparison.';
+      recordBtn.disabled = false;
+      againstFile.disabled = false;
+      compareFile.disabled = false;
+    }
+  }
+
+  function makeGain(value) {
+    const g = audioCtx.createGain();
+    g.gain.value = Number(value);
+    g.connect(audioCtx.destination);
+    return g;
+  }
+
+  function currentReferencePosition() {
+    if (!comparisonPlaying) return 0;
+    return Math.max(0, compareReferenceOffset + (audioCtx.currentTime - compareStartTime));
+  }
+
+  function stopCompareSourcesOnly() {
+    compareSources.forEach(s => {
+      try { s.onended = null; } catch (_) {}
+      try { s.stop(); } catch (_) {}
+    });
+    compareSources = [];
+  }
+
+  function startCompareAt(referencePos = 0) {
+    if (!recordedBuffer || !compareBuffer) return;
+
+    stopCompareSourcesOnly();
+    playbackGeneration += 1;
+    const generation = playbackGeneration;
+
+    const refGain = makeGain(refVol.value);
+    const voiceGain = makeGain(voiceVol.value);
+
+    const ref = audioCtx.createBufferSource();
+    ref.buffer = compareBuffer;
+    ref.connect(refGain);
+
+    const voice = audioCtx.createBufferSource();
+    voice.buffer = recordedBuffer;
+    voice.connect(voiceGain);
+
+    const t = audioCtx.currentTime + 0.04;
+    compareStartTime = t;
+    compareReferenceOffset = referencePos;
+    comparisonPlaying = true;
+    requestWakeLock();
+
+    // Reference begins at the requested musical position.
+    if (referencePos < compareBuffer.duration) {
+      ref.start(t, referencePos);
+    }
+
+    // Mapping:
+    // voiceOffsetSec > 0  => voice is later than reference
+    // voiceOffsetSec < 0  => voice is earlier than reference
+    //
+    // At reference position R, the corresponding voice-buffer position is R - offset.
+    const desiredVoicePos = referencePos - voiceOffsetSec;
+
+    if (desiredVoicePos >= 0) {
+      if (desiredVoicePos < recordedBuffer.duration) {
+        voice.start(t, desiredVoicePos);
+      }
+    } else {
+      // The voice should not begin yet. Start it after the needed delay.
+      const delay = -desiredVoicePos;
+      if (delay < 30) voice.start(t + delay, 0);
+    }
+
+    compareSources = [ref, voice];
+    compareBtn.disabled = true;
+    stopCompareBtn.disabled = false;
+
+    ref.onended = () => {
+      if (generation !== playbackGeneration) return;
+      comparisonPlaying = false;
+    releaseWakeLock();
+      compareSources = [];
+      compareBtn.disabled = false;
+      stopCompareBtn.disabled = true;
+    };
+  }
+
+  async function startCompare() {
+    if (!recordedBuffer || !compareBuffer) return;
+    await ensureContext();
+    stopCompare();
+    startCompareAt(0);
+  }
+
+  function stopCompare() {
+    playbackGeneration += 1;
+    stopCompareSourcesOnly();
+    comparisonPlaying = false;
+    releaseWakeLock();
+    compareReferenceOffset = 0;
+    compareBtn.disabled = false;
+    stopCompareBtn.disabled = true;
+  }
+
+  function applyAlignmentChange(newOffsetSec) {
+    // Keep the setting in a useful range of +/- 5 seconds.
+    voiceOffsetSec = Math.max(-5, Math.min(5, newOffsetSec));
+    updateOffsetDisplay();
+    saveTimingIfEnabled();
+
+    // If comparison is already playing, jump back in at the same point
+    // using the new alignment so the change is heard immediately.
+    if (comparisonPlaying) {
+      const pos = currentReferencePosition();
+      startCompareAt(pos);
+    }
+  }
+
+  function updateOffsetDisplay() {
+    const ms = Math.round(voiceOffsetSec * 1000);
+    offsetVal.textContent = `${ms > 0 ? '+' : ''}${ms} ms`;
+    alignSlider.value = String(ms);
+  }
+
+  recordBtn.addEventListener('click', startRecording);
+  stopBtn.addEventListener('click', stopRecording);
+  compareBtn.addEventListener('click', startCompare);
+  stopCompareBtn.addEventListener('click', stopCompare);
+
+  recordAgainBtn.addEventListener('click', () => {
+    stopCompare();
+    recordedBuffer = null;
+    recordedBlob = null;
+    compareCard.classList.add('hidden');
+    status.textContent = 'Ready to record again.';
+  });
+
+  voiceVol.addEventListener('input', () => {
+    voiceVal.textContent = `${Math.round(Number(voiceVol.value) * 100)}%`;
+  });
+  refVol.addEventListener('input', () => {
+    refVal.textContent = `${Math.round(Number(refVol.value) * 100)}%`;
+  });
+
+  earlier100Btn.addEventListener('click', () => {
+    applyAlignmentChange(voiceOffsetSec - 0.10);
+  });
+  earlier20Btn.addEventListener('click', () => {
+    applyAlignmentChange(voiceOffsetSec - 0.02);
+  });
+  later20Btn.addEventListener('click', () => {
+    applyAlignmentChange(voiceOffsetSec + 0.02);
+  });
+  later100Btn.addEventListener('click', () => {
+    applyAlignmentChange(voiceOffsetSec + 0.10);
+  });
+  resetAlignBtn.addEventListener('click', () => {
+    applyAlignmentChange(0);
+  });
+  alignSlider.addEventListener('input', () => {
+    applyAlignmentChange(Number(alignSlider.value) / 1000);
+  });
+
+  rememberTiming.addEventListener('change', () => {
+    if (rememberTiming.checked) {
+      saveTimingIfEnabled();
+    } else {
+      try {
+        localStorage.removeItem(TIMING_STORAGE_KEY);
+        savedTimingNote.textContent = 'Timing correction will not be remembered.';
+      } catch (_) {}
+    }
+  });
+
+  // Mobile browsers, especially iPhone Safari, require audio to be resumed
+  // from a user gesture. Any tap on a control will wake the audio context.
+  document.addEventListener('pointerdown', async () => {
+    try {
+      if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
+    } catch (_) {}
+  }, {passive:true});
+
+  loadSavedTiming();
+  updateOffsetDisplay();
+})();
+</script>
+</body>
+</html>
