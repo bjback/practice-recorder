@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v7</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v8</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -188,6 +188,7 @@
 
     <div class="row">
       <button id="compareBtn" class="primary">▶ Compare</button>
+      <button id="replayCompareBtn">↺ Replay</button>
       <button id="pauseCompareBtn" disabled>Ⅱ Pause</button>
       <button id="stopCompareBtn" disabled>■ Stop</button>
       <button id="recordAgainBtn">↻ Record Again</button>
@@ -263,6 +264,7 @@
   const status = document.getElementById('status');
   const compareCard = document.getElementById('compareCard');
   const compareBtn = document.getElementById('compareBtn');
+  const replayCompareBtn = document.getElementById('replayCompareBtn');
   const pauseCompareBtn = document.getElementById('pauseCompareBtn');
   const stopCompareBtn = document.getElementById('stopCompareBtn');
   const seekSlider = document.getElementById('seekSlider');
@@ -634,6 +636,7 @@
       compareSources = [];
       setSeekPosition(compareBuffer.duration);
       compareBtn.disabled = false;
+      compareBtn.textContent = '▶ Compare';
       pauseCompareBtn.disabled = true;
       pauseCompareBtn.textContent = 'Ⅱ Pause';
       stopCompareBtn.disabled = true;
@@ -683,7 +686,11 @@
     stopSeekAnimation();
     compareReferenceOffset = 0;
     setSeekPosition(0);
+
+    // Restore the idle Compare controls so the same recording can be
+    // played repeatedly without recording again.
     compareBtn.disabled = false;
+    compareBtn.textContent = '▶ Compare';
     pauseCompareBtn.disabled = true;
     pauseCompareBtn.textContent = 'Ⅱ Pause';
     stopCompareBtn.disabled = true;
@@ -712,6 +719,14 @@
   recordBtn.addEventListener('click', startRecording);
   stopBtn.addEventListener('click', stopRecording);
   compareBtn.addEventListener('click', startCompare);
+  replayCompareBtn.addEventListener('click', () => {
+    playbackGeneration += 1;
+    stopCompareSourcesOnly();
+    comparisonPlaying = false;
+    comparisonPaused = false;
+    setSeekPosition(0);
+    startCompareAt(0);
+  });
   pauseCompareBtn.addEventListener('click', pauseOrResumeCompare);
   stopCompareBtn.addEventListener('click', stopCompare);
 
