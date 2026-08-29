@@ -1,8 +1,11 @@
-# Practice Recorder v6
+# Practice Recorder v7
 
-Changes:
-- Keeps the live My Voice and Reference volume controls from v5.
-- Fixes a mobile audio-start issue by resuming Web Audio after microphone access.
-- Keeps remembered timing correction.
+New in v7:
+- Pause / Resume during Compare.
+- Playback-position slider for choosing where Compare begins.
+- The slider follows playback while Compare is running.
+- You can seek to a new position while paused or playing.
+- Live My Voice and Reference volume controls remain.
+- Per-device timing correction remains.
 
-For GitHub Pages, replace the existing index.html with this file and commit.
+For GitHub Pages, replace the existing `index.html` with this file and commit.

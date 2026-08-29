@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v6</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v7</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -188,9 +188,17 @@
 
     <div class="row">
       <button id="compareBtn" class="primary">▶ Compare</button>
+      <button id="pauseCompareBtn" disabled>Ⅱ Pause</button>
       <button id="stopCompareBtn" disabled>■ Stop</button>
       <button id="recordAgainBtn">↻ Record Again</button>
     </div>
+
+    <div class="sliderRow">
+      <span>Playback</span>
+      <input id="seekSlider" type="range" min="0" max="1" step="0.1" value="0" />
+      <span id="seekTime">0:00 / 0:00</span>
+    </div>
+    <p class="small">Drag Playback to choose where Compare starts. You can also move it while paused or playing.</p>
 
     <div class="sliderRow">
       <span>My voice</span>
@@ -204,7 +212,7 @@
       <span id="refVal">100%</span>
     </div>
 
-    <p class="small">Volume changes take effect immediately while Compare is playing. Set either slider to 0% to hear the other track by itself. Mobile v6 also re-establishes audio playback after the microphone opens.</p>
+    <p class="small">Volume changes take effect immediately while Compare is playing. Set either slider to 0% to hear the other track by itself.</p>
 
     <div class="align">
       <strong>Voice timing</strong>
@@ -255,7 +263,10 @@
   const status = document.getElementById('status');
   const compareCard = document.getElementById('compareCard');
   const compareBtn = document.getElementById('compareBtn');
+  const pauseCompareBtn = document.getElementById('pauseCompareBtn');
   const stopCompareBtn = document.getElementById('stopCompareBtn');
+  const seekSlider = document.getElementById('seekSlider');
+  const seekTime = document.getElementById('seekTime');
   const recordAgainBtn = document.getElementById('recordAgainBtn');
   const voiceVol = document.getElementById('voiceVol');
   const refVol = document.getElementById('refVol');
@@ -481,6 +492,9 @@
       const arr = await recordedBlob.arrayBuffer();
       recordedBuffer = await audioCtx.decodeAudioData(arr.slice(0));
       compareCard.classList.remove('hidden');
+      seekSlider.max = String(compareBuffer.duration);
+      seekSlider.step = '0.1';
+      setSeekPosition(0);
       status.textContent = 'Recording complete. Tap Compare.';
       recordBtn.disabled = false;
       againstFile.disabled = false;
@@ -502,8 +516,45 @@
   }
 
   function currentReferencePosition() {
-    if (!comparisonPlaying) return 0;
+    if (comparisonPaused) return pausedReferencePosition;
+    if (!comparisonPlaying) return Number(seekSlider.value) || 0;
     return Math.max(0, compareReferenceOffset + (audioCtx.currentTime - compareStartTime));
+  }
+
+  function formatTime(seconds) {
+    if (!Number.isFinite(seconds) || seconds < 0) seconds = 0;
+    const whole = Math.floor(seconds);
+    const mins = Math.floor(whole / 60);
+    const secs = whole % 60;
+    return `${mins}:${String(secs).padStart(2, '0')}`;
+  }
+
+  function setSeekPosition(seconds) {
+    const duration = compareBuffer ? compareBuffer.duration : 0;
+    const pos = Math.max(0, Math.min(duration, Number(seconds) || 0));
+    seekSlider.value = String(pos);
+    seekTime.textContent = `${formatTime(pos)} / ${formatTime(duration)}`;
+  }
+
+  function stopSeekAnimation() {
+    if (seekAnimationFrame !== null) {
+      cancelAnimationFrame(seekAnimationFrame);
+      seekAnimationFrame = null;
+    }
+  }
+
+  function updateSeekAnimation() {
+    stopSeekAnimation();
+    const tick = () => {
+      if (!comparisonPlaying) {
+        seekAnimationFrame = null;
+        return;
+      }
+      const pos = Math.min(compareBuffer?.duration || 0, currentReferencePosition());
+      setSeekPosition(pos);
+      seekAnimationFrame = requestAnimationFrame(tick);
+    };
+    seekAnimationFrame = requestAnimationFrame(tick);
   }
 
   function stopCompareSourcesOnly() {
@@ -539,7 +590,10 @@
     const t = audioCtx.currentTime + 0.04;
     compareStartTime = t;
     compareReferenceOffset = referencePos;
+    pausedReferencePosition = referencePos;
     comparisonPlaying = true;
+    comparisonPaused = false;
+    pauseCompareBtn.textContent = 'Ⅱ Pause';
     requestWakeLock();
 
     // Reference begins at the requested musical position.
@@ -566,14 +620,22 @@
 
     compareSources = [ref, voice];
     compareBtn.disabled = true;
+    pauseCompareBtn.disabled = false;
     stopCompareBtn.disabled = false;
+    setSeekPosition(referencePos);
+    updateSeekAnimation();
 
     ref.onended = () => {
       if (generation !== playbackGeneration) return;
       comparisonPlaying = false;
-    releaseWakeLock();
+      comparisonPaused = false;
+      releaseWakeLock();
+      stopSeekAnimation();
       compareSources = [];
+      setSeekPosition(compareBuffer.duration);
       compareBtn.disabled = false;
+      pauseCompareBtn.disabled = true;
+      pauseCompareBtn.textContent = 'Ⅱ Pause';
       stopCompareBtn.disabled = true;
     };
   }
@@ -581,17 +643,49 @@
   async function startCompare() {
     if (!recordedBuffer || !compareBuffer) return;
     await ensureContext();
-    stopCompare();
-    startCompareAt(0);
+    const startPos = Number(seekSlider.value) || 0;
+    playbackGeneration += 1;
+    stopCompareSourcesOnly();
+    comparisonPlaying = false;
+    comparisonPaused = false;
+    startCompareAt(startPos);
+  }
+
+  function pauseOrResumeCompare() {
+    if (comparisonPlaying) {
+      pausedReferencePosition = Math.min(compareBuffer.duration, currentReferencePosition());
+      playbackGeneration += 1;
+      stopCompareSourcesOnly();
+      comparisonPlaying = false;
+      comparisonPaused = true;
+      releaseWakeLock();
+      stopSeekAnimation();
+      setSeekPosition(pausedReferencePosition);
+      compareBtn.disabled = true;
+      pauseCompareBtn.disabled = false;
+      pauseCompareBtn.textContent = '▶ Resume';
+      stopCompareBtn.disabled = false;
+      return;
+    }
+
+    if (comparisonPaused) {
+      startCompareAt(pausedReferencePosition);
+    }
   }
 
   function stopCompare() {
     playbackGeneration += 1;
     stopCompareSourcesOnly();
     comparisonPlaying = false;
+    comparisonPaused = false;
+    pausedReferencePosition = 0;
     releaseWakeLock();
+    stopSeekAnimation();
     compareReferenceOffset = 0;
+    setSeekPosition(0);
     compareBtn.disabled = false;
+    pauseCompareBtn.disabled = true;
+    pauseCompareBtn.textContent = 'Ⅱ Pause';
     stopCompareBtn.disabled = true;
   }
 
@@ -618,7 +712,24 @@
   recordBtn.addEventListener('click', startRecording);
   stopBtn.addEventListener('click', stopRecording);
   compareBtn.addEventListener('click', startCompare);
+  pauseCompareBtn.addEventListener('click', pauseOrResumeCompare);
   stopCompareBtn.addEventListener('click', stopCompare);
+
+  seekSlider.addEventListener('input', () => {
+    const pos = Number(seekSlider.value) || 0;
+    setSeekPosition(pos);
+  });
+
+  seekSlider.addEventListener('change', () => {
+    const pos = Number(seekSlider.value) || 0;
+
+    if (comparisonPlaying) {
+      startCompareAt(pos);
+    } else if (comparisonPaused) {
+      pausedReferencePosition = pos;
+      setSeekPosition(pos);
+    }
+  });
 
   recordAgainBtn.addEventListener('click', () => {
     stopCompare();
