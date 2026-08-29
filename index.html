@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v5</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v6</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -204,7 +204,7 @@
       <span id="refVal">100%</span>
     </div>
 
-    <p class="small">Volume changes take effect immediately while Compare is playing. Set either slider to 0% to hear the other track by itself.</p>
+    <p class="small">Volume changes take effect immediately while Compare is playing. Set either slider to 0% to hear the other track by itself. Mobile v6 also re-establishes audio playback after the microphone opens.</p>
 
     <div class="align">
       <strong>Voice timing</strong>
@@ -406,6 +406,8 @@
     }
 
     try {
+      status.textContent = 'Starting microphone and audio…';
+
       micStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
@@ -414,6 +416,12 @@
         }
       });
 
+      // On iPhone/mobile browsers, opening the microphone can change the audio
+      // route and suspend Web Audio. Resume it again AFTER microphone access.
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+
       chunks = [];
       mediaRecorder = new MediaRecorder(micStream);
       mediaRecorder.ondataavailable = e => {
@@ -421,16 +429,17 @@
       };
       mediaRecorder.onstop = finishRecording;
 
-      mediaRecorder.start();
-    requestWakeLock();
-
       againstSource = audioCtx.createBufferSource();
       againstSource.buffer = againstBuffer;
       againstSource.connect(audioCtx.destination);
 
-      // Small scheduling delay helps both events begin consistently.
-      const t = audioCtx.currentTime + 0.12;
+      // Schedule playback first, then start recording immediately before it.
+      // The existing timing correction compensates for stable capture latency.
+      const t = audioCtx.currentTime + 0.18;
       againstSource.start(t);
+
+      mediaRecorder.start();
+      requestWakeLock();
 
       recordBtn.disabled = true;
       stopBtn.disabled = false;
@@ -439,7 +448,11 @@
       status.textContent = 'Recording… sing your part now.';
     } catch (err) {
       console.error(err);
-      status.textContent = 'Microphone permission was not granted or recording could not start.';
+      status.textContent = 'Could not start microphone/audio. Reload the page and try again.';
+      try {
+        if (micStream) micStream.getTracks().forEach(t => t.stop());
+      } catch (_) {}
+      micStream = null;
     }
   }
 
@@ -668,6 +681,12 @@
       if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
     } catch (_) {}
   }, {passive:true});
+
+  document.addEventListener('click', async () => {
+    try {
+      if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
+    } catch (_) {}
+  });
 
   loadSavedTiming();
   updateOffsetDisplay();
