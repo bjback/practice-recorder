@@ -1,11 +1,10 @@
-# Practice Recorder v7
+# Practice Recorder v8
 
-New in v7:
-- Pause / Resume during Compare.
-- Playback-position slider for choosing where Compare begins.
-- The slider follows playback while Compare is running.
-- You can seek to a new position while paused or playing.
-- Live My Voice and Reference volume controls remain.
-- Per-device timing correction remains.
+Fixes:
+- After Stop, Compare is available again immediately.
+- The same recording can be played over and over.
+- Added a Replay button to restart Compare from the beginning.
+- Pause/Resume and playback-position slider remain.
+- Live volume controls and remembered timing correction remain.
 
-For GitHub Pages, replace the existing `index.html` with this file and commit.
+For GitHub Pages, replace the existing index.html with this file and commit.
