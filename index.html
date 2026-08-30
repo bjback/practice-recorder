@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v8</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v9</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -159,13 +159,13 @@
 
   <div class="card">
     <label for="againstFile">1. Track to sing against</label>
-    <input id="againstFile" type="file" accept="audio/*" />
+    <input id="againstFile" type="file" accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
     <p class="small">Usually your “part missing” track.</p>
   </div>
 
   <div class="card">
     <label for="compareFile">2. Track to compare with</label>
-    <input id="compareFile" type="file" accept="audio/*" />
+    <input id="compareFile" type="file" accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
     <p class="small">Usually your solo or predominant-part track.</p>
   </div>
 
@@ -175,6 +175,13 @@
   </div>
 
   <div class="card">
+    <div class="sliderRow">
+      <span>Record from</span>
+      <input id="recordSeekSlider" type="range" min="0" max="1" step="0.1" value="0" disabled />
+      <span id="recordSeekTime">0:00 / 0:00</span>
+    </div>
+    <p class="small">Drag Record from to the place where you want the backing track and recording to begin.</p>
+
     <div class="row">
       <button id="recordBtn" class="primary" disabled>● Record</button>
       <button id="stopBtn" disabled>■ Stop</button>
@@ -247,8 +254,9 @@
     <details>
       <summary><strong>How it works</strong></summary>
       <p class="small">
-        During recording, the first track plays while your microphone records your voice.
-        During comparison, your recording and the second track are played together.
+        Before recording, use Record from to choose where in the first track you want to begin.
+        During recording, the first track plays from that point while your microphone records your voice.
+        During comparison, your recording is aligned to the same musical position in the second track.
         The Voice Timing controls shift your recording relative to the reference, changes are heard immediately during comparison, and the chosen timing can be remembered automatically on this device.
       </p>
     </details>
@@ -261,6 +269,8 @@
   const compareFile = document.getElementById('compareFile');
   const recordBtn = document.getElementById('recordBtn');
   const stopBtn = document.getElementById('stopBtn');
+  const recordSeekSlider = document.getElementById('recordSeekSlider');
+  const recordSeekTime = document.getElementById('recordSeekTime');
   const status = document.getElementById('status');
   const compareCard = document.getElementById('compareCard');
   const compareBtn = document.getElementById('compareBtn');
@@ -290,6 +300,7 @@
   let compareBuffer = null;
   let recordedBuffer = null;
   let recordedBlob = null;
+  let recordingStartOffsetSec = 0;
 
   let mediaRecorder = null;
   let micStream = null;
@@ -302,7 +313,9 @@
   let compareStartTime = 0;       // AudioContext time when current comparison segment started
   let compareReferenceOffset = 0; // Reference-track position used for current segment
   let comparisonPlaying = false;
-    releaseWakeLock();
+  let comparisonPaused = false;
+  let pausedReferencePosition = 0;
+  let seekAnimationFrame = null;
   let playbackGeneration = 0;
 
   // Positive = voice later than reference. Negative = voice earlier than reference.
@@ -371,6 +384,7 @@
 
   function updateReady() {
     recordBtn.disabled = !(againstBuffer && compareBuffer);
+    recordSeekSlider.disabled = !againstBuffer;
     if (recordBtn.disabled) status.textContent = 'Choose both audio files to begin.';
     else status.textContent = 'Ready to record.';
   }
@@ -391,6 +405,9 @@
     status.textContent = 'Loading sing-against track…';
     try {
       againstBuffer = await fileToAudioBuffer(againstFile.files[0]);
+      recordSeekSlider.max = String(againstBuffer.duration);
+      recordSeekSlider.step = '0.1';
+      setRecordSeekPosition(0);
       updateReady();
     } catch (e) {
       console.error(e);
@@ -449,7 +466,11 @@
       // Schedule playback first, then start recording immediately before it.
       // The existing timing correction compensates for stable capture latency.
       const t = audioCtx.currentTime + 0.18;
-      againstSource.start(t);
+      recordingStartOffsetSec = Math.max(
+        0,
+        Math.min(againstBuffer.duration, Number(recordSeekSlider.value) || 0)
+      );
+      againstSource.start(t, recordingStartOffsetSec);
 
       mediaRecorder.start();
       requestWakeLock();
@@ -458,7 +479,8 @@
       stopBtn.disabled = false;
       againstFile.disabled = true;
       compareFile.disabled = true;
-      status.textContent = 'Recording… sing your part now.';
+      recordSeekSlider.disabled = true;
+      status.textContent = `Recording from ${formatTime(recordingStartOffsetSec)}… sing your part now.`;
     } catch (err) {
       console.error(err);
       status.textContent = 'Could not start microphone/audio. Reload the page and try again.';
@@ -496,17 +518,19 @@
       compareCard.classList.remove('hidden');
       seekSlider.max = String(compareBuffer.duration);
       seekSlider.step = '0.1';
-      setSeekPosition(0);
+      setSeekPosition(Math.min(recordingStartOffsetSec, compareBuffer.duration));
       status.textContent = 'Recording complete. Tap Compare.';
       recordBtn.disabled = false;
       againstFile.disabled = false;
       compareFile.disabled = false;
+      recordSeekSlider.disabled = !againstBuffer;
     } catch (e) {
       console.error(e);
       status.textContent = 'The recording was made, but this browser could not decode it for comparison.';
       recordBtn.disabled = false;
       againstFile.disabled = false;
       compareFile.disabled = false;
+      recordSeekSlider.disabled = !againstBuffer;
     }
   }
 
@@ -529,6 +553,13 @@
     const mins = Math.floor(whole / 60);
     const secs = whole % 60;
     return `${mins}:${String(secs).padStart(2, '0')}`;
+  }
+
+  function setRecordSeekPosition(seconds) {
+    const duration = againstBuffer ? againstBuffer.duration : 0;
+    const pos = Math.max(0, Math.min(duration, Number(seconds) || 0));
+    recordSeekSlider.value = String(pos);
+    recordSeekTime.textContent = `${formatTime(pos)} / ${formatTime(duration)}`;
   }
 
   function setSeekPosition(seconds) {
@@ -607,8 +638,9 @@
     // voiceOffsetSec > 0  => voice is later than reference
     // voiceOffsetSec < 0  => voice is earlier than reference
     //
-    // At reference position R, the corresponding voice-buffer position is R - offset.
-    const desiredVoicePos = referencePos - voiceOffsetSec;
+    // recordedBuffer position 0 corresponds to recordingStartOffsetSec in the music.
+    // At reference position R, map into the excerpt recording and then apply timing correction.
+    const desiredVoicePos = referencePos - recordingStartOffsetSec - voiceOffsetSec;
 
     if (desiredVoicePos >= 0) {
       if (desiredVoicePos < recordedBuffer.duration) {
@@ -681,11 +713,11 @@
     stopCompareSourcesOnly();
     comparisonPlaying = false;
     comparisonPaused = false;
-    pausedReferencePosition = 0;
+    pausedReferencePosition = recordingStartOffsetSec;
     releaseWakeLock();
     stopSeekAnimation();
-    compareReferenceOffset = 0;
-    setSeekPosition(0);
+    compareReferenceOffset = recordingStartOffsetSec;
+    setSeekPosition(Math.min(recordingStartOffsetSec, compareBuffer?.duration || 0));
 
     // Restore the idle Compare controls so the same recording can be
     // played repeatedly without recording again.
@@ -716,6 +748,14 @@
     alignSlider.value = String(ms);
   }
 
+  recordSeekSlider.addEventListener('input', () => {
+    setRecordSeekPosition(Number(recordSeekSlider.value) || 0);
+  });
+
+  recordSeekSlider.addEventListener('change', () => {
+    setRecordSeekPosition(Number(recordSeekSlider.value) || 0);
+  });
+
   recordBtn.addEventListener('click', startRecording);
   stopBtn.addEventListener('click', stopRecording);
   compareBtn.addEventListener('click', startCompare);
@@ -724,8 +764,9 @@
     stopCompareSourcesOnly();
     comparisonPlaying = false;
     comparisonPaused = false;
-    setSeekPosition(0);
-    startCompareAt(0);
+    const replayPos = Math.min(recordingStartOffsetSec, compareBuffer?.duration || 0);
+    setSeekPosition(replayPos);
+    startCompareAt(replayPos);
   });
   pauseCompareBtn.addEventListener('click', pauseOrResumeCompare);
   stopCompareBtn.addEventListener('click', stopCompare);
