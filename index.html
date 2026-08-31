@@ -160,13 +160,21 @@
   <div class="card">
     <label for="againstFile">1. Track to sing against</label>
     <input id="againstFile" type="file" accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
+    <p id="againstFileName" class="small" aria-live="polite">No track loaded.</p>
     <p class="small">Usually your “part missing” track.</p>
   </div>
 
   <div class="card">
     <label for="compareFile">2. Track to compare with</label>
     <input id="compareFile" type="file" accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
+    <p id="compareFileName" class="small" aria-live="polite">No track loaded.</p>
     <p class="small">Usually your solo or predominant-part track.</p>
+  </div>
+
+  <div class="card">
+    <p class="small">Your selected tracks are saved as local copies in this browser and restored next time. They are not uploaded. Use the same browser and device; private browsing or clearing browser data may remove them. To use updated originals, choose the files again.</p>
+    <button id="forgetFilesBtn" type="button">Forget saved files</button>
+    <p id="savedFilesNote" class="small" role="status" aria-live="polite"></p>
   </div>
 
   <div class="card warning">
@@ -295,6 +303,13 @@
   const savedTimingNote = document.getElementById('savedTimingNote');
   const mobileStatus = document.getElementById('mobileStatus');
 
+  const forgetFilesBtn = document.getElementById('forgetFilesBtn');
+  const savedFilesNote = document.getElementById('savedFilesNote');
+  const trackNames = {
+    against: document.getElementById('againstFileName'),
+    compare: document.getElementById('compareFileName')
+  };
+  let fileOperationBusy = false;
   let audioCtx = null;
   let againstBuffer = null;
   let compareBuffer = null;
@@ -383,8 +398,8 @@
   }
 
   function updateReady() {
-    recordBtn.disabled = !(againstBuffer && compareBuffer);
-    recordSeekSlider.disabled = !againstBuffer;
+    recordBtn.disabled = fileOperationBusy || !(againstBuffer && compareBuffer);
+    recordSeekSlider.disabled = fileOperationBusy || !againstBuffer;
     if (recordBtn.disabled) status.textContent = 'Choose both audio files to begin.';
     else status.textContent = 'Ready to record.';
   }
@@ -394,36 +409,132 @@
     if (audioCtx.state === 'suspended') await audioCtx.resume();
   }
 
+  // Decoding does not require playback permission. Do not await resume here:
+  // restoring files on page load must work before the first user gesture.
   async function fileToAudioBuffer(file) {
-    await ensureContext();
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const arr = await file.arrayBuffer();
-    return await audioCtx.decodeAudioData(arr.slice(0));
+    return await audioCtx.decodeAudioData(arr);
   }
 
-  againstFile.addEventListener('change', async () => {
-    if (!againstFile.files[0]) return;
-    status.textContent = 'Loading sing-against track…';
+  function openTrackStore() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open('practiceRecorderTracks', 1);
+      request.onupgradeneeded = () => request.result.createObjectStore('tracks');
+      request.onerror = () => reject(request.error);
+      request.onblocked = () => reject(new Error('Track storage is blocked.'));
+      request.onsuccess = () => resolve(request.result);
+    });
+  }
+
+  async function trackStorage(mode, operation) {
+    const db = await openTrackStore();
     try {
-      againstBuffer = await fileToAudioBuffer(againstFile.files[0]);
-      recordSeekSlider.max = String(againstBuffer.duration);
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction('tracks', mode);
+        const request = operation(tx.objectStore('tracks'));
+        tx.oncomplete = () => resolve(request.result);
+        tx.onabort = () => reject(tx.error || new Error('Track storage failed.'));
+        tx.onerror = () => reject(tx.error || new Error('Track storage failed.'));
+      });
+    } finally {
+      db.close();
+    }
+  }
+
+  function setFileBusy(busy) {
+    fileOperationBusy = busy;
+    againstFile.disabled = busy;
+    compareFile.disabled = busy;
+    forgetFilesBtn.disabled = busy;
+    updateReady();
+  }
+
+  function installTrack(key, buffer, name) {
+    if (key === 'against') {
+      againstBuffer = buffer;
+      recordSeekSlider.max = String(buffer.duration);
       recordSeekSlider.step = '0.1';
       setRecordSeekPosition(0);
-      updateReady();
-    } catch (e) {
-      console.error(e);
-      status.textContent = 'Could not load the first audio file.';
+    } else {
+      compareBuffer = buffer;
     }
-  });
+    trackNames[key].textContent = 'Loaded: ' + name;
+  }
 
-  compareFile.addEventListener('change', async () => {
-    if (!compareFile.files[0]) return;
-    status.textContent = 'Loading comparison track…';
+  async function chooseTrack(key, input) {
+    const file = input.files[0];
+    if (!file || fileOperationBusy) return;
+    setFileBusy(true);
+    status.textContent = 'Loading audio file…';
     try {
-      compareBuffer = await fileToAudioBuffer(compareFile.files[0]);
-      updateReady();
-    } catch (e) {
-      console.error(e);
-      status.textContent = 'Could not load the comparison audio file.';
+      const buffer = await fileToAudioBuffer(file);
+      stopCompare();
+      recordedBuffer = null;
+      recordedBlob = null;
+      compareCard.classList.add('hidden');
+      installTrack(key, buffer, file.name);
+      try {
+        await trackStorage('readwrite', store => store.put({name: file.name, file}, key));
+        savedFilesNote.textContent = 'Track saved for next time in this browser.';
+      } catch (error) {
+        console.warn(error);
+        savedFilesNote.textContent = 'Track loaded for this session, but could not be saved. Check browser storage space/settings. A previously saved track may still return next time.';
+      }
+    } catch (error) {
+      console.warn(error);
+      savedFilesNote.textContent = 'Could not load that audio file. Any previously loaded track is unchanged.';
+    } finally {
+      // The separate Loaded label also represents tracks restored from storage.
+      input.value = '';
+      setFileBusy(false);
+    }
+  }
+
+  againstFile.addEventListener('change', () => chooseTrack('against', againstFile));
+  compareFile.addEventListener('change', () => chooseTrack('compare', compareFile));
+
+  async function restoreTracks() {
+    setFileBusy(true);
+    savedFilesNote.textContent = 'Checking for saved tracks…';
+    try {
+      const entries = await Promise.all(['against', 'compare'].map(async key =>
+        [key, await trackStorage('readonly', store => store.get(key))]));
+      let restored = 0;
+      let failed = 0;
+      for (const [key, entry] of entries) {
+        if (!entry) continue;
+        try {
+          installTrack(key, await fileToAudioBuffer(entry.file), entry.name);
+          restored++;
+        } catch (error) {
+          console.warn(error);
+          failed++;
+        }
+      }
+      savedFilesNote.textContent = failed
+        ? 'Some saved tracks could not be loaded. Choose those files again.'
+        : restored ? 'Saved tracks restored. You can choose different files above.'
+        : 'Choose your tracks once; they will be remembered here.';
+    } catch (error) {
+      console.warn(error);
+      savedFilesNote.textContent = 'Saved files are unavailable in this browser mode. You can still choose files for this session.';
+    } finally {
+      setFileBusy(false);
+    }
+  }
+
+  forgetFilesBtn.addEventListener('click', async () => {
+    if (fileOperationBusy) return;
+    setFileBusy(true);
+    try {
+      await trackStorage('readwrite', store => store.clear());
+      savedFilesNote.textContent = 'Saved copies removed. Loaded tracks remain usable for this session. Choose files again to save them.';
+    } catch (error) {
+      console.warn(error);
+      savedFilesNote.textContent = 'Could not remove saved copies. Try again or clear this site’s data in browser settings.';
+    } finally {
+      setFileBusy(false);
     }
   });
 
@@ -479,6 +590,7 @@
       stopBtn.disabled = false;
       againstFile.disabled = true;
       compareFile.disabled = true;
+      forgetFilesBtn.disabled = true;
       recordSeekSlider.disabled = true;
       status.textContent = `Recording from ${formatTime(recordingStartOffsetSec)}… sing your part now.`;
     } catch (err) {
@@ -523,6 +635,7 @@
       recordBtn.disabled = false;
       againstFile.disabled = false;
       compareFile.disabled = false;
+      forgetFilesBtn.disabled = false;
       recordSeekSlider.disabled = !againstBuffer;
     } catch (e) {
       console.error(e);
@@ -530,6 +643,7 @@
       recordBtn.disabled = false;
       againstFile.disabled = false;
       compareFile.disabled = false;
+      forgetFilesBtn.disabled = false;
       recordSeekSlider.disabled = !againstBuffer;
     }
   }
@@ -855,9 +969,11 @@
     } catch (_) {}
   });
 
+  restoreTracks();
   loadSavedTiming();
   updateOffsetDisplay();
 })();
 </script>
 </body>
 </html>
+
