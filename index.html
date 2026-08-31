@@ -33,7 +33,7 @@
     font-weight: 700;
     margin-bottom: 8px;
   }
-  input[type=file] { width:100%; }
+  .track-name { font-weight: 700; overflow-wrap: anywhere; }
   button {
     font: inherit;
     padding: 12px 16px;
@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v9</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v10</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -152,22 +152,24 @@
       The backing track should play through the earbuds while the phone microphone records your voice.
       If your earbuds have a microphone, the phone may use that mic instead of the phone's built-in mic.
     </div>
-    <div id="mobileStatus" class="mobile-status small">Ready for mobile test.</div>
+    <div id="mobileStatus" class="mobile-status small">Allow microphone access when asked.</div>
   </div>
 
   <p class="sub">Sing against one learning track, then compare your recording with your part.</p>
 
   <div class="card">
     <label for="againstFile">1. Track to sing against</label>
-    <input id="againstFile" type="file" accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
-    <p id="againstFileName" class="small" aria-live="polite">No track loaded.</p>
+    <input id="againstFile" type="file" hidden accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
+    <p id="againstFileName" class="track-name" aria-live="polite">No track loaded.</p>
+    <button id="againstChooseBtn" type="button" aria-describedby="againstFileName">Choose file</button>
     <p class="small">Usually your “part missing” track.</p>
   </div>
 
   <div class="card">
     <label for="compareFile">2. Track to compare with</label>
-    <input id="compareFile" type="file" accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
-    <p id="compareFileName" class="small" aria-live="polite">No track loaded.</p>
+    <input id="compareFile" type="file" hidden accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
+    <p id="compareFileName" class="track-name" aria-live="polite">No track loaded.</p>
+    <button id="compareChooseBtn" type="button" aria-describedby="compareFileName">Choose file</button>
     <p class="small">Usually your solo or predominant-part track.</p>
   </div>
 
@@ -301,7 +303,7 @@
   const offsetVal = document.getElementById('offsetVal');
   const rememberTiming = document.getElementById('rememberTiming');
   const savedTimingNote = document.getElementById('savedTimingNote');
-  const mobileStatus = document.getElementById('mobileStatus');
+
 
   const forgetFilesBtn = document.getElementById('forgetFilesBtn');
   const savedFilesNote = document.getElementById('savedFilesNote');
@@ -309,6 +311,12 @@
     against: document.getElementById('againstFileName'),
     compare: document.getElementById('compareFileName')
   };
+  const chooseButtons = {
+    against: document.getElementById('againstChooseBtn'),
+    compare: document.getElementById('compareChooseBtn')
+  };
+  chooseButtons.against.addEventListener('click', () => againstFile.click());
+  chooseButtons.compare.addEventListener('click', () => compareFile.click());
   let fileOperationBusy = false;
   let audioCtx = null;
   let againstBuffer = null;
@@ -360,14 +368,6 @@
     }
   });
 
-  if (mobileStatus) {
-    const ua = navigator.userAgent || '';
-    if (/iPhone|iPad|iPod/i.test(ua)) {
-      mobileStatus.textContent = 'iPhone/iPad detected. Use Safari and allow microphone access when asked.';
-    } else if (/Android/i.test(ua)) {
-      mobileStatus.textContent = 'Android detected. Use Chrome and allow microphone access when asked.';
-    }
-  }
 
 
   function loadSavedTiming() {
@@ -445,7 +445,9 @@
   function setFileBusy(busy) {
     fileOperationBusy = busy;
     againstFile.disabled = busy;
+    chooseButtons.against.disabled = busy;
     compareFile.disabled = busy;
+    chooseButtons.compare.disabled = busy;
     forgetFilesBtn.disabled = busy;
     updateReady();
   }
@@ -460,6 +462,7 @@
       compareBuffer = buffer;
     }
     trackNames[key].textContent = 'Loaded: ' + name;
+    chooseButtons[key].textContent = 'Change file';
   }
 
   async function chooseTrack(key, input) {
@@ -589,7 +592,9 @@
       recordBtn.disabled = true;
       stopBtn.disabled = false;
       againstFile.disabled = true;
+      chooseButtons.against.disabled = true;
       compareFile.disabled = true;
+      chooseButtons.compare.disabled = true;
       forgetFilesBtn.disabled = true;
       recordSeekSlider.disabled = true;
       status.textContent = `Recording from ${formatTime(recordingStartOffsetSec)}… sing your part now.`;
@@ -634,7 +639,9 @@
       status.textContent = 'Recording complete. Tap Compare.';
       recordBtn.disabled = false;
       againstFile.disabled = false;
+      chooseButtons.against.disabled = false;
       compareFile.disabled = false;
+      chooseButtons.compare.disabled = false;
       forgetFilesBtn.disabled = false;
       recordSeekSlider.disabled = !againstBuffer;
     } catch (e) {
@@ -642,7 +649,9 @@
       status.textContent = 'The recording was made, but this browser could not decode it for comparison.';
       recordBtn.disabled = false;
       againstFile.disabled = false;
+      chooseButtons.against.disabled = false;
       compareFile.disabled = false;
+      chooseButtons.compare.disabled = false;
       forgetFilesBtn.disabled = false;
       recordSeekSlider.disabled = !againstBuffer;
     }
@@ -976,4 +985,3 @@
 </script>
 </body>
 </html>
-
