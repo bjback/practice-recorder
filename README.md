@@ -1,8 +1,14 @@
-# Practice Recorder v10
+# Practice Recorder v11
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
-## New in v10
+## New in v11
+
+- Uses the most compatible default-microphone request for wired and Bluetooth inputs on iPadOS.
+- Shows a specific explanation when browser permission, device availability, or the audio route prevents recording.
+- Restores the controls after a failed start so the user can correct the problem and retry.
+
+## Added in v10
 
 - Both selected tracks are saved as local copies in this browser and restored automatically when you reopen the recorder.
 - Loaded filenames are displayed prominently, with a **Change file** button for each track.
@@ -32,6 +38,6 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload both `index.html` and this `README.md` to the repository's root on `main`, replacing the existing files, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v10**.
+Upload both `index.html` and this `README.md` to the repository's root on `main`, replacing the existing files, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v11**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.

@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v10</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v11</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -196,7 +196,7 @@
       <button id="recordBtn" class="primary" disabled>● Record</button>
       <button id="stopBtn" disabled>■ Stop</button>
     </div>
-    <div id="status" class="status">Choose both audio files to begin.</div>
+    <div id="status" class="status" role="status" aria-live="polite">Choose both audio files to begin.</div>
     <p class="small">Your recording stays on this device and is not uploaded anywhere.</p>
   </div>
 
@@ -542,8 +542,6 @@
   });
 
   async function startRecording() {
-    await ensureContext();
-
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
       alert('This browser does not support the recording features this prototype needs.');
       return;
@@ -551,17 +549,17 @@
 
     try {
       status.textContent = 'Starting microphone and audio…';
+      recordBtn.disabled = true;
 
-      micStream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false
-        }
-      });
+      // Ask for the browser's default microphone without optional processing
+      // constraints. This is the most compatible request on iPadOS, especially
+      // when the current input is a wired or Bluetooth accessory.
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // On iPhone/mobile browsers, opening the microphone can change the audio
-      // route and suspend Web Audio. Resume it again AFTER microphone access.
+      // Resume Web Audio while this recording attempt still follows the user's
+      // tap. Opening the microphone can change and suspend the iPad audio route.
+      await ensureContext();
+
       if (audioCtx.state === 'suspended') {
         await audioCtx.resume();
       }
@@ -600,12 +598,45 @@
       status.textContent = `Recording from ${formatTime(recordingStartOffsetSec)}… sing your part now.`;
     } catch (err) {
       console.error(err);
-      status.textContent = 'Could not start microphone/audio. Reload the page and try again.';
       try {
+        if (againstSource) againstSource.stop();
         if (micStream) micStream.getTracks().forEach(t => t.stop());
       } catch (_) {}
+      againstSource = null;
       micStream = null;
+      mediaRecorder = null;
+      stopBtn.disabled = true;
+      againstFile.disabled = false;
+      chooseButtons.against.disabled = false;
+      compareFile.disabled = false;
+      chooseButtons.compare.disabled = false;
+      forgetFilesBtn.disabled = false;
+      recordSeekSlider.disabled = !againstBuffer;
+      recordBtn.disabled = !(againstBuffer && compareBuffer);
+      releaseWakeLock();
+      status.textContent = microphoneErrorMessage(err);
     }
+  }
+
+  function microphoneErrorMessage(error) {
+    const name = error?.name || 'UnknownError';
+    if (name === 'NotAllowedError' || name === 'SecurityError') {
+      if (!window.isSecureContext) {
+        return 'Microphone access requires a secure HTTPS page. Open the published GitHub Pages address, not an HTTP address.';
+      }
+      return 'Microphone access was blocked for this website. In your browser’s website settings, set Microphone to Allow, reload the page, and try again.';
+    }
+    if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+      return 'No microphone was found. Reconnect the microphone, confirm that iPadOS recognizes it, reload the page, and try again.';
+    }
+    if (name === 'NotReadableError' || name === 'TrackStartError' || name === 'AbortError') {
+      return 'The browser could not use the microphone. Close other apps or tabs using audio, reconnect the microphone, reload the page, and try again.';
+    }
+    if (name === 'InvalidStateError') {
+      return 'The recorder tab was not active when microphone access started. Keep this tab open, reload it, and try again.';
+    }
+    const detail = error?.message ? ` (${error.message})` : '';
+    return `Could not start microphone/audio: ${name}${detail}. Reload the page and try again.`;
   }
 
   function stopRecording() {
