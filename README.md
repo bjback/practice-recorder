@@ -1,8 +1,13 @@
-# Practice Recorder v11
+# Practice Recorder v12
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
-## New in v11
+## New in v12
+
+- Disables Safari's automatic microphone processing to work around an iPadOS 17 issue that can lock backing-track playback at one volume while recording.
+- Falls back to the basic microphone request if another browser rejects those optional settings.
+
+## Added in v11
 
 - Uses the most compatible default-microphone request for wired and Bluetooth inputs on iPadOS.
 - Shows a specific explanation when browser permission, device availability, or the audio route prevents recording.
@@ -38,6 +43,6 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload both `index.html` and this `README.md` to the repository's root on `main`, replacing the existing files, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v11**.
+Upload both `index.html` and this `README.md` to the repository's root on `main`, replacing the existing files, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v12**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.

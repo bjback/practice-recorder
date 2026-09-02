@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v11</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v12</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -551,10 +551,24 @@
       status.textContent = 'Starting microphone and audio…';
       recordBtn.disabled = true;
 
-      // Ask for the browser's default microphone without optional processing
-      // constraints. This is the most compatible request on iPadOS, especially
-      // when the current input is a wired or Bluetooth accessory.
-      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Disabling Safari's voice processing avoids an iPadOS 17 WebKit issue
+      // that can force playback to one low, unresponsive volume while the mic
+      // is active. Fall back to the simplest request if a browser rejects the
+      // optional constraints.
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            autoGainControl: false,
+            echoCancellation: false,
+            noiseSuppression: false
+          }
+        });
+      } catch (constraintError) {
+        if (constraintError?.name !== 'OverconstrainedError' && constraintError?.name !== 'TypeError') {
+          throw constraintError;
+        }
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
 
       // Resume Web Audio while this recording attempt still follows the user's
       // tap. Opening the microphone can change and suspend the iPad audio route.
