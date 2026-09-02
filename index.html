@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v12</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v13</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -202,6 +202,7 @@
 
   <div id="compareCard" class="card hidden">
     <h2>Compare</h2>
+    <p id="recordingSignalNote" class="small" role="status" aria-live="polite"></p>
 
     <div class="row">
       <button id="compareBtn" class="primary">▶ Compare</button>
@@ -283,6 +284,7 @@
   const recordSeekTime = document.getElementById('recordSeekTime');
   const status = document.getElementById('status');
   const compareCard = document.getElementById('compareCard');
+  const recordingSignalNote = document.getElementById('recordingSignalNote');
   const compareBtn = document.getElementById('compareBtn');
   const replayCompareBtn = document.getElementById('replayCompareBtn');
   const pauseCompareBtn = document.getElementById('pauseCompareBtn');
@@ -324,6 +326,7 @@
   let recordedBuffer = null;
   let recordedBlob = null;
   let recordingStartOffsetSec = 0;
+  let activeMicName = 'microphone';
 
   let mediaRecorder = null;
   let micStream = null;
@@ -549,26 +552,14 @@
 
     try {
       status.textContent = 'Starting microphone and audio…';
+      recordingSignalNote.textContent = '';
       recordBtn.disabled = true;
 
-      // Disabling Safari's voice processing avoids an iPadOS 17 WebKit issue
-      // that can force playback to one low, unresponsive volume while the mic
-      // is active. Fall back to the simplest request if a browser rejects the
-      // optional constraints.
-      try {
-        micStream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            autoGainControl: false,
-            echoCancellation: false,
-            noiseSuppression: false
-          }
-        });
-      } catch (constraintError) {
-        if (constraintError?.name !== 'OverconstrainedError' && constraintError?.name !== 'TypeError') {
-          throw constraintError;
-        }
-        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      }
+      // Keep this request simple. Some iPadOS/WebKit combinations return a
+      // stream but capture silence when optional audio constraints are used.
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const micTrack = micStream.getAudioTracks()[0];
+      activeMicName = micTrack?.label || 'microphone';
 
       // Resume Web Audio while this recording attempt still follows the user's
       // tap. Opening the microphone can change and suspend the iPad audio route.
@@ -609,7 +600,7 @@
       chooseButtons.compare.disabled = true;
       forgetFilesBtn.disabled = true;
       recordSeekSlider.disabled = true;
-      status.textContent = `Recording from ${formatTime(recordingStartOffsetSec)}… sing your part now.`;
+      status.textContent = `Recording from ${formatTime(recordingStartOffsetSec)} with ${activeMicName}… sing your part now.`;
     } catch (err) {
       console.error(err);
       try {
@@ -678,6 +669,10 @@
       const arr = await recordedBlob.arrayBuffer();
       recordedBuffer = await audioCtx.decodeAudioData(arr.slice(0));
       compareCard.classList.remove('hidden');
+      const signal = measureRecordedSignal(recordedBuffer);
+      recordingSignalNote.textContent = signal.isSilent
+        ? `Warning: the recording from ${activeMicName} contains little or no microphone sound. Reconnect the headset before opening the recorder, reload the page, and try again.`
+        : `Microphone audio captured from ${activeMicName}. To hear it alone, set Reference to 0% before tapping Compare.`;
       seekSlider.max = String(compareBuffer.duration);
       seekSlider.step = '0.1';
       setSeekPosition(Math.min(recordingStartOffsetSec, compareBuffer.duration));
@@ -700,6 +695,24 @@
       forgetFilesBtn.disabled = false;
       recordSeekSlider.disabled = !againstBuffer;
     }
+  }
+
+  function measureRecordedSignal(buffer) {
+    let peak = 0;
+    let sumSquares = 0;
+    let samplesRead = 0;
+    const stride = Math.max(1, Math.floor(buffer.length / 100000));
+    for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+      const samples = buffer.getChannelData(channel);
+      for (let i = 0; i < samples.length; i += stride) {
+        const magnitude = Math.abs(samples[i]);
+        peak = Math.max(peak, magnitude);
+        sumSquares += samples[i] * samples[i];
+        samplesRead++;
+      }
+    }
+    const rms = samplesRead ? Math.sqrt(sumSquares / samplesRead) : 0;
+    return { peak, rms, isSilent: peak < 0.003 || rms < 0.0005 };
   }
 
   function makeGain(value) {
@@ -959,6 +972,7 @@
     stopCompare();
     recordedBuffer = null;
     recordedBlob = null;
+    recordingSignalNote.textContent = '';
     compareCard.classList.add('hidden');
     status.textContent = 'Ready to record again.';
   });
