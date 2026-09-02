@@ -144,7 +144,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v13</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v14</span></h1>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -555,9 +555,15 @@
       recordingSignalNote.textContent = '';
       recordBtn.disabled = true;
 
+      // Reset the WebKit audio session before requesting the microphone.
+      // Without this, iPadOS 17 can switch output from a connected headset to
+      // the iPad speaker when getUserMedia starts.
+      setAudioSessionType('auto');
+
       // Keep this request simple. Some iPadOS/WebKit combinations return a
       // stream but capture silence when optional audio constraints are used.
       micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setAudioSessionType('play-and-record');
       const micTrack = micStream.getAudioTracks()[0];
       activeMicName = micTrack?.label || 'microphone';
 
@@ -610,6 +616,7 @@
       againstSource = null;
       micStream = null;
       mediaRecorder = null;
+      resetAudioSession();
       stopBtn.disabled = true;
       againstFile.disabled = false;
       chooseButtons.against.disabled = false;
@@ -621,6 +628,21 @@
       releaseWakeLock();
       status.textContent = microphoneErrorMessage(err);
     }
+  }
+
+  function setAudioSessionType(type) {
+    try {
+      if (navigator.audioSession && 'type' in navigator.audioSession) {
+        navigator.audioSession.type = type;
+      }
+    } catch (_) {}
+  }
+
+  function resetAudioSession() {
+    // Switching through playback before auto prompts WebKit to restore the
+    // normal high-quality output route after microphone capture ends.
+    setAudioSessionType('playback');
+    setAudioSessionType('auto');
   }
 
   function microphoneErrorMessage(error) {
@@ -663,6 +685,7 @@
       micStream.getTracks().forEach(t => t.stop());
       micStream = null;
     }
+    resetAudioSession();
 
     try {
       recordedBlob = new Blob(chunks, { type: mediaRecorder.mimeType || 'audio/webm' });

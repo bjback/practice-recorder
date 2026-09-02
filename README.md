@@ -1,8 +1,13 @@
-# Practice Recorder v13
+# Practice Recorder v14
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
-## New in v13
+## New in v14
+
+- Uses WebKit's audio-session routing control, when available, to keep recording output on a connected wired or Bluetooth headset instead of the iPad speaker.
+- Resets the audio session after recording so comparison returns to the normal high-quality headset route.
+
+## Added in v13
 
 - Returns to the basic microphone request because optional WebKit audio constraints caused silent recordings on the tested iPad.
 - Displays the microphone name used by the browser.
@@ -45,6 +50,6 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload both `index.html` and this `README.md` to the repository's root on `main`, replacing the existing files, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v13**.
+Upload both `index.html` and this `README.md` to the repository's root on `main`, replacing the existing files, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v14**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.
