@@ -1,8 +1,20 @@
-# Practice Recorder v14 — Step-by-Step Instructions
+# Practice Recorder v16 — Step-by-Step Instructions
 
 The Practice Recorder helps you sing along with one learning track, record your voice, and compare your recording with a second track.
 
 Your music and recording stay on your device. The recorder does not upload them.
+
+## Make the words larger
+
+At the top of the recorder, choose one of these buttons:
+
+- **Normal:** standard-size words
+- **Large:** words that are 25% larger
+- **Extra Large:** words that are 50% larger
+
+The recorder remembers your choice on that device. You can change it at any time.
+
+Your browser or device may also have its own text-size, page-zoom, and accessibility settings. Those settings can be used together with the recorder's text-size buttons.
 
 ## Before you begin
 

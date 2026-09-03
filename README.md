@@ -1,10 +1,21 @@
-# Practice Recorder v14
+# Practice Recorder v16
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
-See [USER_GUIDE.md](USER_GUIDE.md) for detailed, beginner-friendly instructions and troubleshooting.
+Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUIDE.md](USER_GUIDE.md) on GitHub.
 
-## New in v14
+## New in v16
+
+- Adds Normal, Large, and Extra Large text options at the top of the recorder.
+- Remembers the selected text size on that device.
+- Uses accessible pressed-button states for keyboard and screen-reader users.
+
+## Added in v15
+
+- Adds a prominent **Instructions & Help** link inside the recorder.
+- Provides the detailed guide as a normal web page for members who are unfamiliar with GitHub.
+
+## Added in v14
 
 - Uses WebKit's audio-session routing control, when available, to keep recording output on a connected wired or Bluetooth headset instead of the iPad speaker.
 - Resets the audio session after recording so comparison returns to the normal high-quality headset route.
@@ -52,6 +63,6 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload both `index.html` and this `README.md` to the repository's root on `main`, replacing the existing files, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v14**.
+Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v16**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.

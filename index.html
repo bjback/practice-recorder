@@ -34,13 +34,34 @@
     margin-bottom: 8px;
   }
   .track-name { font-weight: 700; overflow-wrap: anywhere; }
-  button {
+  .text-size-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 10px 0 16px;
+  }
+  .text-size-controls strong { margin-right: 4px; }
+  .text-size-btn[aria-pressed="true"] {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+    font-weight: 800;
+  }
+  button, .guide-link {
     font: inherit;
     padding: 12px 16px;
     border-radius: 10px;
     border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
     cursor: pointer;
     min-height: 46px;
+  }
+  .guide-link {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    color: inherit;
+    font-weight: 800;
+    text-decoration: none;
   }
   button.primary {
     font-weight: 800;
@@ -127,6 +148,10 @@
     @media (max-width: 600px) {
       h1 { font-size: 1.55rem; }
       h2 { font-size: 1.2rem; }
+      .sliderRow {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
       .row, .controls {
         display: flex;
         flex-wrap: wrap;
@@ -144,7 +169,13 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v14</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v16</span></h1>
+  <div class="text-size-controls" aria-label="Text size">
+    <strong>Text size:</strong>
+    <button class="text-size-btn" type="button" data-size="100" aria-pressed="true">Normal</button>
+    <button class="text-size-btn" type="button" data-size="125" aria-pressed="false">Large</button>
+    <button class="text-size-btn" type="button" data-size="150" aria-pressed="false">Extra Large</button>
+  </div>
   <div class="mobile-tip">
     <b>Phone + earbuds test</b>
     <div class="small" style="margin-top:6px;">
@@ -156,6 +187,7 @@
   </div>
 
   <p class="sub">Sing against one learning track, then compare your recording with your part.</p>
+  <p><a class="guide-link" href="user-guide.html">Instructions &amp; Help</a></p>
 
   <div class="card">
     <label for="againstFile">1. Track to sing against</label>
@@ -277,6 +309,7 @@
 <script>
 (() => {
   const againstFile = document.getElementById('againstFile');
+  const textSizeButtons = Array.from(document.querySelectorAll('.text-size-btn'));
   const compareFile = document.getElementById('compareFile');
   const recordBtn = document.getElementById('recordBtn');
   const stopBtn = document.getElementById('stopBtn');
@@ -347,8 +380,31 @@
   // Positive = voice later than reference. Negative = voice earlier than reference.
   let voiceOffsetSec = 0;
   const TIMING_STORAGE_KEY = 'practiceRecorderVoiceOffsetMs';
+  const TEXT_SIZE_STORAGE_KEY = 'practiceRecorderTextSize';
 
   let wakeLock = null;
+
+  function setTextSize(size, remember = true) {
+    const allowedSizes = [100, 125, 150];
+    const selected = allowedSizes.includes(Number(size)) ? Number(size) : 100;
+    document.documentElement.style.fontSize = `${selected}%`;
+    textSizeButtons.forEach(button => {
+      button.setAttribute('aria-pressed', String(Number(button.dataset.size) === selected));
+    });
+    if (remember) {
+      try { localStorage.setItem(TEXT_SIZE_STORAGE_KEY, String(selected)); } catch (_) {}
+    }
+  }
+
+  function loadTextSize() {
+    let saved = 100;
+    try { saved = Number(localStorage.getItem(TEXT_SIZE_STORAGE_KEY)) || 100; } catch (_) {}
+    setTextSize(saved, false);
+  }
+
+  textSizeButtons.forEach(button => {
+    button.addEventListener('click', () => setTextSize(button.dataset.size));
+  });
 
   async function requestWakeLock() {
     try {
@@ -1060,6 +1116,7 @@
     } catch (_) {}
   });
 
+  loadTextSize();
   restoreTracks();
   loadSavedTiming();
   updateOffsetDisplay();
