@@ -1,4 +1,4 @@
-# Practice Recorder v16 — Step-by-Step Instructions
+# Practice Recorder v17 — Step-by-Step Instructions
 
 The Practice Recorder helps you sing along with one learning track, record your voice, and compare your recording with a second track.
 
@@ -6,7 +6,7 @@ Your music and recording stay on your device. The recorder does not upload them.
 
 ## Make the words larger
 
-At the top of the recorder, choose one of these buttons:
+At the top of the recorder or the web version of this guide, choose one of these buttons:
 
 - **Normal:** standard-size words
 - **Large:** words that are 25% larger
@@ -51,10 +51,12 @@ This permission is only for recording your voice in the Practice Recorder. Your 
 
 ### If Chrome says microphone access is blocked on an iPad
 
+These steps apply to iPadOS 17 and modern versions, including iPadOS 26. The names or locations of Settings items may vary slightly by version.
+
 1. Open the iPad **Settings** app.
-2. Tap **Privacy & Security**.
-3. Tap **Microphone**.
-4. Make sure **Chrome** is turned on.
+2. Open **Privacy & Security → Microphone**.
+3. Make sure **Chrome** is turned on.
+4. If Chrome is not listed there, open **Settings → Apps → Chrome** and turn on **Microphone**.
 5. Return to Chrome.
 6. Reload the Practice Recorder page.
 7. Press **Record** and choose **Allow** if asked.
@@ -72,7 +74,7 @@ If you see a microphone symbol beside Chrome’s address bar, tap it and make su
 
 ## White River Sound members: finding downloaded chorus files
 
-This section is only for White River Sound chorus members who obtain practice tracks from HarmonySite or [whiteriversoundchorus.org](https://whiteriversoundchorus.org). If you received your tracks from another choir, teacher, or source, skip to **Choose the two tracks** below.
+This section is only for White River Sound chorus members who obtain practice tracks from the HarmonySite app or [whiteriversoundchorus.org](https://whiteriversoundchorus.org). If you received your tracks from another choir, teacher, or source, skip to **Choose the two tracks** below.
 
 On an iPhone, the folder depends on how you downloaded the files:
 

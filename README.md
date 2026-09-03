@@ -1,12 +1,18 @@
-# Practice Recorder v16
+# Practice Recorder v17
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
 Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUIDE.md](USER_GUIDE.md) on GitHub.
 
-## New in v16
+## New in v17
 
-- Adds Normal, Large, and Extra Large text options at the top of the recorder.
+- Applies the remembered Normal, Large, and Extra Large text sizes to the web user guide as well as the recorder.
+- Clarifies that the Chrome microphone-permission steps cover iPadOS 17 and modern versions, including iPadOS 26.
+- Refers consistently to the **HarmonySite app** in the White River Sound instructions.
+
+## Added in v16
+
+- Adds Normal, Large, and Extra Large text options to the recorder and web user guide.
 - Remembers the selected text size on that device.
 - Uses accessible pressed-button states for keyboard and screen-reader users.
 
@@ -63,6 +69,6 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v16**.
+Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v17**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.

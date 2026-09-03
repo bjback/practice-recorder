@@ -4,6 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Practice Recorder — Instructions &amp; Help</title>
+<script>
+  try {
+    const savedSize = Number(localStorage.getItem('practiceRecorderTextSize'));
+    if ([100, 125, 150].includes(savedSize)) document.documentElement.style.fontSize = `${savedSize}%`;
+  } catch (_) {}
+</script>
 <style>
   :root { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -14,19 +20,29 @@
   h3 { margin-top: 24px; }
   li { margin: 7px 0; }
   a { color: LinkText; }
-  .back { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 15px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 10px; color: inherit; font-weight: 800; text-decoration: none; }
+  button, .back { font: inherit; min-height: 48px; padding: 10px 15px; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 10px; color: inherit; background: Canvas; cursor: pointer; }
+  .back { display: inline-flex; align-items: center; font-weight: 800; text-decoration: none; }
   .back-bottom { margin-top: 30px; }
+  .text-size-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 16px 0; }
+  .text-size-controls strong { margin-right: 4px; }
+  .text-size-btn[aria-pressed="true"] { outline: 3px solid currentColor; outline-offset: 2px; font-weight: 800; }
   code { padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, CanvasText 10%, transparent); }
   @media (max-width: 600px) { main { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); } h1 { font-size: 1.65rem; } h2 { font-size: 1.3rem; } }
 </style>
 </head>
 <body>
 <main>
-<a class="back" href="index.html">← Back to Practice Recorder</a><h1 id="practice-recorder-v16-step-by-step-instructions">Practice Recorder v16 — Step-by-Step Instructions</h1>
+<a class="back" href="index.html">← Back to Practice Recorder</a>
+<div class="text-size-controls" aria-label="Text size">
+  <strong>Text size:</strong>
+  <button class="text-size-btn" type="button" data-size="100" aria-pressed="true">Normal</button>
+  <button class="text-size-btn" type="button" data-size="125" aria-pressed="false">Large</button>
+  <button class="text-size-btn" type="button" data-size="150" aria-pressed="false">Extra Large</button>
+</div><h1 id="practice-recorder-v17-step-by-step-instructions">Practice Recorder v17 — Step-by-Step Instructions</h1>
 <p>The Practice Recorder helps you sing along with one learning track, record your voice, and compare your recording with a second track.</p>
 <p>Your music and recording stay on your device. The recorder does not upload them.</p>
 <h2 id="make-the-words-larger">Make the words larger</h2>
-<p>At the top of the recorder, choose one of these buttons:</p>
+<p>At the top of the recorder or the web version of this guide, choose one of these buttons:</p>
 <ul>
 <li><strong>Normal:</strong> standard-size words</li>
 <li><strong>Large:</strong> words that are 25% larger</li>
@@ -61,11 +77,12 @@
 <p>The first time you press <strong>Record</strong>, the browser should ask for permission to use the microphone. Choose <strong>Allow</strong>.</p>
 <p>This permission is only for recording your voice in the Practice Recorder. Your recording is not uploaded.</p>
 <h3 id="if-chrome-says-microphone-access-is-blocked-on-an-ipad">If Chrome says microphone access is blocked on an iPad</h3>
+<p>These steps apply to iPadOS 17 and modern versions, including iPadOS 26. The names or locations of Settings items may vary slightly by version.</p>
 <ol>
 <li>Open the iPad <strong>Settings</strong> app.</li>
-<li>Tap <strong>Privacy &amp; Security</strong>.</li>
-<li>Tap <strong>Microphone</strong>.</li>
+<li>Open <strong>Privacy &amp; Security → Microphone</strong>.</li>
 <li>Make sure <strong>Chrome</strong> is turned on.</li>
+<li>If Chrome is not listed there, open <strong>Settings → Apps → Chrome</strong> and turn on <strong>Microphone</strong>.</li>
 <li>Return to Chrome.</li>
 <li>Reload the Practice Recorder page.</li>
 <li>Press <strong>Record</strong> and choose <strong>Allow</strong> if asked.</li>
@@ -81,7 +98,7 @@
 <li>Press <strong>Record</strong> again.</li>
 </ol>
 <h2 id="white-river-sound-members-finding-downloaded-chorus-files">White River Sound members: finding downloaded chorus files</h2>
-<p>This section is only for White River Sound chorus members who obtain practice tracks from HarmonySite or <a href="https://whiteriversoundchorus.org">whiteriversoundchorus.org</a>. If you received your tracks from another choir, teacher, or source, skip to <strong>Choose the two tracks</strong> below.</p>
+<p>This section is only for White River Sound chorus members who obtain practice tracks from the HarmonySite app or <a href="https://whiteriversoundchorus.org">whiteriversoundchorus.org</a>. If you received your tracks from another choir, teacher, or source, skip to <strong>Choose the two tracks</strong> below.</p>
 <p>On an iPhone, the folder depends on how you downloaded the files:</p>
 <ul>
 <li>From the <strong>HarmonySite app:</strong> <strong>Files → On My iPhone → HarmonySite</strong></li>
@@ -228,5 +245,20 @@
 <p>Once this test works, begin your normal practice session.</p>
 <p class="back-bottom"><a class="back" href="index.html">← Back to Practice Recorder</a></p>
 </main>
+<script>
+(() => {
+  const buttons = Array.from(document.querySelectorAll('.text-size-btn'));
+  const setTextSize = size => {
+    const selected = [100, 125, 150].includes(Number(size)) ? Number(size) : 100;
+    document.documentElement.style.fontSize = `${selected}%`;
+    buttons.forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.size) === selected)));
+    try { localStorage.setItem('practiceRecorderTextSize', String(selected)); } catch (_) {}
+  };
+  let saved = 100;
+  try { saved = Number(localStorage.getItem('practiceRecorderTextSize')) || 100; } catch (_) {}
+  setTextSize(saved);
+  buttons.forEach(button => button.addEventListener('click', () => setTextSize(button.dataset.size)));
+})();
+</script>
 </body>
 </html>
