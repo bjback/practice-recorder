@@ -2,6 +2,8 @@
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
+See [USER_GUIDE.md](USER_GUIDE.md) for detailed, beginner-friendly instructions and troubleshooting.
+
 ## New in v14
 
 - Uses WebKit's audio-session routing control, when available, to keep recording output on a connected wired or Bluetooth headset instead of the iPad speaker.
