@@ -1,10 +1,18 @@
-# Practice Recorder v17
+# Practice Recorder v18
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
 Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUIDE.md](USER_GUIDE.md) on GitHub.
 
-## New in v17
+## New in v18
+
+- Replaces the phone-test box with a visible explanation of the recorder and latency.
+- Tells users to sing normally and correct device delay afterward with **Voice timing**.
+- Makes clear that headphones are recommended for cleaner comparison but are not required.
+- Adds laptop instructions, including direct White River Sound website downloads without HarmonySite or Voice Record Pro.
+- Adds help for long filenames in the iPhone file picker and exporting files from Voice Record Pro.
+
+## Added in v17
 
 - Applies the remembered Normal, Large, and Extra Large text sizes to the web user guide as well as the recorder.
 - Clarifies that the Chrome microphone-permission steps cover iPadOS 17 and modern versions, including iPadOS 26.
@@ -48,7 +56,7 @@ Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUI
 
 ## How to use
 
-1. Connect earbuds or headphones to keep the learning track out of the microphone recording.
+1. Use earbuds or headphones if available to keep the learning track out of the microphone recording. They are recommended but not required.
 2. Choose the **Track to sing against**, usually your part-missing track.
 3. Choose the **Track to compare with**, usually your solo or predominant-part track.
 4. Use **Record from** to choose a starting point, then press **Record** and allow microphone access when asked.
@@ -69,6 +77,6 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v17**.
+Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v18**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.

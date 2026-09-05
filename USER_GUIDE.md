@@ -1,4 +1,4 @@
-# Practice Recorder v17 — Step-by-Step Instructions
+# Practice Recorder v18 — Step-by-Step Instructions
 
 The Practice Recorder helps you sing along with one learning track, record your voice, and compare your recording with a second track.
 
@@ -21,19 +21,40 @@ Your browser or device may also have its own text-size, page-zoom, and accessibi
 You need:
 
 - A phone, tablet, or computer connected to the internet
-- Earbuds or headphones
 - The two practice-track files saved on your device
+
+Headphones, a headset, or earbuds are recommended but not required. They keep the backing track out of the microphone and make your recorded voice easier to compare. If you do not have them, use the device's speaker and built-in microphone. The microphone may capture some of the backing track, but you can still use the recorder.
 
 The two tracks are usually:
 
 1. **Track to sing against:** the recording with your part missing
 2. **Track to compare with:** the recording with your part sung alone or louder than the other parts
 
+## Using a laptop
+
+You do not need the HarmonySite app or Voice Record Pro on a laptop.
+
+### White River Sound members
+
+1. Open [whiteriversoundchorus.org](https://www.whiteriversoundchorus.org/) in Chrome, Edge, Safari, or another browser.
+2. Log in to the chorus website.
+3. Download the two practice tracks you need.
+4. Look in the laptop's **Downloads** folder. Your browser or computer may be configured to save files somewhere else.
+5. Open the Practice Recorder.
+6. Use the two **Choose file** buttons to select the downloaded tracks.
+7. Press **Record** and allow microphone access when asked.
+
+Chrome and Edge users usually find downloads in **Downloads**. Safari users on a Mac should also look in **Downloads** unless Safari was configured to use another folder. You may download the files in one browser and use the recorder in another, as long as you can find the files.
+
+### Other laptop users
+
+Download or locate the two tracks supplied by your choir, teacher, or other source. Open the Practice Recorder in your browser and select those files. A laptop's built-in microphone and speakers work; headphones usually provide a cleaner comparison.
+
 ## If you are using an iPad
 
 Chrome is recommended. Safari may prevent you from changing the track volume while the microphone is active.
 
-Before opening the Practice Recorder:
+If you have a wired or Bluetooth headset, connect it before opening the Practice Recorder:
 
 1. Connect your wired or Bluetooth earbuds or headset.
 2. Play some music and make sure you hear it through the earbuds or headset.
@@ -41,7 +62,9 @@ Before opening the Practice Recorder:
 4. Open Chrome.
 5. Open the Practice Recorder.
 
-Keep the headset connected until you finish practicing. If you change or reconnect the headset, close and reopen the recorder before recording again.
+Keep the headset connected until you finish practicing. If you change or reconnect it, close and reopen the recorder before recording again.
+
+If you do not have a headset or earbuds, skip these connection steps and use the iPad's speaker and microphone.
 
 ## Allow microphone access
 
@@ -84,6 +107,12 @@ On an iPhone, the folder depends on how you downloaded the files:
 
 Use the same download method each time if possible. This makes your practice tracks easier to find because they should continue going to the same folder.
 
+If a long filename is cut off or its middle is hidden, tap the **More** (three-dots) button in Files and choose **List**. If the full name is still not visible, turn the phone sideways to provide more room.
+
+### Files stored in the Voice Record Pro app
+
+Voice Record Pro is separate from the White River Sound website. If a track exists only inside Voice Record Pro, open that track in Voice Record Pro and use its export or share option to send a copy to the Files app. In the iPhone share choices, select **Save to Files**, choose a folder you will remember, and tap **Save**. Button names may vary with the version of Voice Record Pro.
+
 These locations have been confirmed on an iPhone. They may be different on an iPad, and Android file locations have not yet been confirmed. The Practice Recorder also works for people who are not White River Sound members; they should select their audio files from wherever those files were saved on their device.
 
 ## Choose the two tracks
@@ -112,8 +141,8 @@ To select a different track, tap **Change file** under that track.
 
 ## Record your voice
 
-1. Put on your earbuds or headphones.
-2. Make sure the learning track is playing through them, not through the device speaker.
+1. If you have earbuds or headphones, put them on and make sure the learning track plays through them.
+2. If you do not have them, leave the device speaker at a comfortable volume. The recorder will still work.
 3. To begin at the start of the song, leave **Record from** at `0:00`.
 4. To practice a later section, drag **Record from** to the desired starting time.
 5. Tap **Record**.
@@ -132,8 +161,8 @@ If you see **Microphone audio captured from…**, the recorder detected sound fr
 
 If you see a warning that the recording contains little or no microphone sound:
 
-1. Check that the headset is fully connected.
-2. Make sure its microphone is not muted.
+1. If you are using a headset, check that it is fully connected and not muted.
+2. If you are not using one, speak toward the device's built-in microphone.
 3. Close other apps that might be using the microphone.
 4. Close and reopen the recorder.
 5. Record a short test while speaking loudly.
@@ -208,13 +237,15 @@ Allow microphone access for the browser and the recorder’s website. Follow the
 3. Completely close the browser.
 4. Open the browser and recorder again.
 
-### The track plays through the iPad speaker
+### The track plays through the iPad speaker when I intended to use a headset
 
-1. Stop recording immediately to prevent the microphone from recording the track.
+1. Stop recording.
 2. Close the recorder.
 3. Connect the headset before reopening the browser.
 4. Confirm that other music plays through the headset.
 5. Reopen the recorder and try a short test.
+
+If you do not have a headset, speaker playback is expected and you may continue. The recording may include some sound from the backing track.
 
 ### Safari volume will not change while recording
 
