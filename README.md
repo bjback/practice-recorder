@@ -1,10 +1,15 @@
-# Practice Recorder v18
+# Practice Recorder v19
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
 Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUIDE.md](USER_GUIDE.md) on GitHub.
 
-## New in v18
+## New in v19
+
+- Corrects the iPhone audio-session transition so comparison audio remains audible after microphone recording ends.
+- Selects play-and-record mode before microphone capture and keeps playback mode active afterward.
+
+## Added in v18
 
 - Replaces the phone-test box with a visible explanation of the recorder and latency.
 - Tells users to sing normally and correct device delay afterward with **Voice timing**.
@@ -77,6 +82,6 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v18**.
+Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v19**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.

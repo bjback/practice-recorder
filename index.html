@@ -169,7 +169,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v18</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v19</span></h1>
   <div class="text-size-controls" aria-label="Text size">
     <strong>Text size:</strong>
     <button class="text-size-btn" type="button" data-size="100" aria-pressed="true">Normal</button>
@@ -617,10 +617,10 @@
       recordingSignalNote.textContent = '';
       recordBtn.disabled = true;
 
-      // Reset the WebKit audio session before requesting the microphone.
-      // Without this, iPadOS 17 can switch output from a connected headset to
-      // the iPad speaker when getUserMedia starts.
-      setAudioSessionType('auto');
+      // Tell iOS that the page will play and record at the same time. Setting
+      // this before microphone capture avoids WebKit choosing an unsuitable
+      // audio route or category when getUserMedia starts.
+      setAudioSessionType('play-and-record');
 
       // Keep this request simple. Some iPadOS/WebKit combinations return a
       // stream but capture silence when optional audio constraints are used.
@@ -701,10 +701,9 @@
   }
 
   function resetAudioSession() {
-    // Switching through playback before auto prompts WebKit to restore the
-    // normal high-quality output route after microphone capture ends.
+    // Keep iOS in playback mode after capture. Returning immediately to auto
+    // can leave Web Audio silent, especially when the phone's ringer is muted.
     setAudioSessionType('playback');
-    setAudioSessionType('auto');
   }
 
   function microphoneErrorMessage(error) {
