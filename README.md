@@ -3,7 +3,7 @@
 ## New in v20
 
 - Added Android Chrome setup, Downloads guidance, microphone permission help, headphone advice, and a short first test to both user guides.
-- Voice timing instructions now start at −100 ms, use 100 ms steps for larger adjustments, and use 20 ms steps only when nearly synchronized. A saved correction that already works should be kept.
+- Voice timing instructions adjust from the current correction without resetting: use 100 ms steps for larger adjustments and 20 ms steps only when nearly synchronized. A saved correction that already works should be kept.
 - Renamed the file-removal button to **Remove remembered tracks** and explained that original music files remain safe.
 - Made the no-microphone error message apply to any device.
 - Made the Remove remembered tracks button smaller and less prominent while keeping it easy to tap.

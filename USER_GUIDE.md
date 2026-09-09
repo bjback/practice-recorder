@@ -226,12 +226,13 @@ Your microphone recording lasts only until you close or reload the page. The two
 
 Your device may add a small delay while recording. Use **Voice timing** if your voice and the reference do not sound synchronized.
 
-1. When setting the timing for the first time, start at **−100 ms**: tap **Reset** to show `0 ms`, then tap **← 100 ms** once. This moves your recorded voice earlier by one tenth of a second.
-2. Listen with both your voice and the reference audible. If your voice still sounds late, tap **← 100 ms** again. If your voice sounds early, use **100 ms →** to move it later.
-3. Keep using the **100 ms** buttons for the larger adjustments. **Only switch to the 20 ms buttons when your voice and the reference are nearly synchronized** (or a 100 ms step takes you past the best match). Use **← 20 ms** for a little earlier and **20 ms →** for a little later.
-4. Stop adjusting when the two sound lined up. Sing normally; do not try to sing early or late to compensate for the device.
+1. If your voice sounds late, tap **← 100 ms** and listen. Repeat until your voice and the reference are nearly lined up.
+2. Then use **← 20 ms** to fine-tune.
+3. If you go too far and your voice sounds early, use **20 ms →** to move it back slightly.
 
-The −100 ms setting is a starting point, not the right setting for every phone or headset. If you already have a saved correction that works, keep it. **Reset** returns the correction to `0 ms`.
+**Do not reset before adjusting.** Stop adjusting when the two sound lined up. Sing normally; do not try to sing early or late to compensate for the device.
+
+The buttons change your current correction; you do not need to reach a particular number. If your saved correction already works, keep it. Use **Reset** only if you deliberately want to discard your current timing correction and return to `0 ms`.
 
 The timing changes immediately while comparison is playing.
 
