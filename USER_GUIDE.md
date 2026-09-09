@@ -1,4 +1,4 @@
-# Practice Recorder v19 — Step-by-Step Instructions
+# Practice Recorder v20 — Step-by-Step Instructions
 
 The Practice Recorder helps you sing along with one learning track, record your voice, and compare your recording with a second track.
 
@@ -18,6 +18,8 @@ Your browser or device may also have its own text-size, page-zoom, and accessibi
 
 ## Before you begin
 
+You only need one phone, tablet, or computer. Headphones are helpful but optional.
+
 You need:
 
 - A phone, tablet, or computer connected to the internet
@@ -29,6 +31,30 @@ The two tracks are usually:
 
 1. **Track to sing against:** the recording with your part missing
 2. **Track to compare with:** the recording with your part sung alone or louder than the other parts
+
+## Using an Android phone or tablet
+
+1. Use an up-to-date version of **Chrome**. Open the Practice Recorder directly in Chrome.
+2. Download your two practice tracks before starting. White River Sound members can open [whiteriversoundchorus.org](https://www.whiteriversoundchorus.org/) in Chrome, log in, and download the tracks without using the HarmonySite app or Voice Record Pro.
+3. Look for the tracks in **Downloads** in the phone's **Files** or **My Files** app. You can also see downloaded files in **Chrome → ⋮ → Downloads**. Names and locations may vary by phone.
+4. If you are using headphones or earbuds, connect them first. Play a little music to check that you hear it through them, then stop that music.
+5. Open the recorder and use each **Choose file** button to select a track. In the file chooser, look for **Downloads**; you may need to tap **Browse** or the menu first.
+6. Tap **Record** and allow microphone access when asked.
+7. Keep the recorder visible and your phone unlocked while recording and processing. Avoid switching apps.
+8. Start with the ten-second test under **A good first test** before practicing a full song.
+
+Headphones are optional. If you do not have them, use the phone's speaker and microphone. If Bluetooth headphones give you trouble, try wired headphones or the phone's speaker and microphone. After changing headphones, stop and reopen the recorder, then make a new short recording and check **Voice timing** again. Reopening the recorder loses your current voice recording.
+
+Tracks downloaded inside the Android HarmonySite app may be stored somewhere else; that location has not yet been confirmed. Downloading from the chorus website in Chrome gives you a simpler place to start looking.
+
+### If microphone access is blocked on Android
+
+1. In **Chrome**, open **⋮ → Settings → Site settings → Microphone**. Make sure microphone requests are allowed. If the recorder's website is listed as blocked, select it and allow microphone access.
+2. In the phone's **Settings** app, open **Apps → Chrome → Permissions → Microphone** and allow access while using the app. Menu names may vary.
+3. If your phone has a separate **Microphone access** privacy switch, make sure it is on.
+4. Return to Chrome, reload the recorder, tap **Record**, and allow access if asked.
+
+For more help, see Google's [Android microphone instructions](https://support.google.com/chrome/answer/2693767?co=GENIE.Platform%3DAndroid&hl=en) and [download instructions](https://support.google.com/chrome/answer/95759?co=GENIE.Platform%3DAndroid&hl=en).
 
 ## Using a laptop
 
@@ -113,7 +139,7 @@ If a long filename is cut off or its middle is hidden, tap the **More** (three-d
 
 Voice Record Pro is separate from the White River Sound website. If a track exists only inside Voice Record Pro, open that track in Voice Record Pro and use its export or share option to send a copy to the Files app. In the iPhone share choices, select **Save to Files**, choose a folder you will remember, and tap **Save**. Button names may vary with the version of Voice Record Pro.
 
-These locations have been confirmed on an iPhone. They may be different on an iPad, and Android file locations have not yet been confirmed. The Practice Recorder also works for people who are not White River Sound members; they should select their audio files from wherever those files were saved on their device.
+These locations have been confirmed on an iPhone. They may be different on an iPad. Android users should follow **Using an Android phone or tablet** above. The Practice Recorder also works for people who are not White River Sound members; they should select their audio files from wherever those files were saved on their device.
 
 ## Choose the two tracks
 
@@ -200,21 +226,29 @@ Your microphone recording lasts only until you close or reload the page. The two
 
 Your device may add a small delay while recording. Use **Voice timing** if your voice and the reference do not sound synchronized.
 
-- If your voice sounds late, tap an **Earlier** button.
-- If your voice sounds early, tap a **Later** button.
-- Use the `20 ms` buttons for small changes.
-- Use the `100 ms` buttons for larger changes.
-- Tap **Reset** to return to `0 ms`.
+1. When setting the timing for the first time, start at **−100 ms**: tap **Reset** to show `0 ms`, then tap **← 100 ms** once. This moves your recorded voice earlier by one tenth of a second.
+2. Listen with both your voice and the reference audible. If your voice still sounds late, tap **← 100 ms** again. If your voice sounds early, use **100 ms →** to move it later.
+3. Keep using the **100 ms** buttons for the larger adjustments. **Only switch to the 20 ms buttons when your voice and the reference are nearly synchronized** (or a 100 ms step takes you past the best match). Use **← 20 ms** for a little earlier and **20 ms →** for a little later.
+4. Stop adjusting when the two sound lined up. Sing normally; do not try to sing early or late to compensate for the device.
+
+The −100 ms setting is a starting point, not the right setting for every phone or headset. If you already have a saved correction that works, keep it. **Reset** returns the correction to `0 ms`.
 
 The timing changes immediately while comparison is playing.
 
 Leave **Remember this timing correction on this device** checked if you want the recorder to use the same correction next time.
 
-## Remove the remembered tracks
+## What does “Remove remembered tracks” mean?
 
-Tap **Forget saved files** to remove the recorder’s saved copies.
+The recorder remembers your two practice tracks so they are ready when you come back. **Most people do not need to use this button.**
 
-This does not delete the original files from your device. Tracks already loaded remain available until you close or reload the page.
+Tap **Remove remembered tracks** only if you do not want these two tracks to appear automatically next time.
+
+- **Your original music files are not deleted.** They stay wherever you saved them on your phone, tablet, or computer.
+- You can keep practicing with the tracks already open until you close or reload the recorder.
+- The next time you open the recorder, you will need to choose your two tracks again.
+- This button does not erase the voice recording you are currently comparing or change your saved timing correction.
+
+**Want to practice a different song?** Use **Change file** under each track. You do not need to remove the remembered tracks first. Choosing files also tells the recorder to remember them for next time.
 
 ## Troubleshooting
 

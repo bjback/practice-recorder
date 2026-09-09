@@ -1,10 +1,19 @@
-# Practice Recorder v19
+# Practice Recorder v20
+
+## New in v20
+
+- Added Android Chrome setup, Downloads guidance, microphone permission help, headphone advice, and a short first test to both user guides.
+- Voice timing instructions now start at −100 ms, use 100 ms steps for larger adjustments, and use 20 ms steps only when nearly synchronized. A saved correction that already works should be kept.
+- Renamed the file-removal button to **Remove remembered tracks** and explained that original music files remain safe.
+- Made the no-microphone error message apply to any device.
+- Made the Remove remembered tracks button smaller and less prominent while keeping it easy to tap.
+- Highlighted that only one phone, tablet, or computer is needed in the recorder and both guides.
 
 Sing against a learning track, record your voice, and compare your recording with your part.
 
 Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUIDE.md](USER_GUIDE.md) on GitHub.
 
-## New in v19
+## Added in v19
 
 - Corrects the iPhone audio-session transition so comparison audio remains audible after microphone recording ends.
 - Selects play-and-record mode before microphone capture and keeps playback mode active afterward.
@@ -56,7 +65,7 @@ Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUI
 
 - Both selected tracks are saved as local copies in this browser and restored automatically when you reopen the recorder.
 - Loaded filenames are displayed prominently, with a **Change file** button for each track.
-- **Forget saved files** removes the saved copies while keeping the loaded tracks usable for the current session.
+- **Remove remembered tracks** stops the two practice tracks from appearing automatically next time. Users can keep practicing with the tracks already open. To switch songs, use **Change file** instead.
 - Microphone guidance now says **Allow microphone access when asked**, without specifying a browser.
 
 ## How to use
@@ -77,11 +86,11 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 - The app saves copies, not links to the original files. If you edit an original, use **Change file** to load and save the updated version.
 - Private browsing, clearing site data, or browser storage cleanup may remove saved tracks. Keep your original audio files.
 - If saving fails, the loaded track can still be used for that session. A warning is shown; a previously saved track may return next time.
-- **Forget saved files** does not delete your original audio files or your saved timing correction. Choose files again to save them for future sessions.
+- **Remove remembered tracks** does not delete your original music files, the voice recording currently open, or your saved timing correction. Choose files again to remember them for next time.
 - Microphone recordings are held only for the current page session; they are not restored when you reopen the recorder.
 
 ## Update GitHub Pages
 
-Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v19**.
+Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v20**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.

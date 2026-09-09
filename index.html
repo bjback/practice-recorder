@@ -165,11 +165,23 @@
       }
     }
 
+    #forgetFilesBtn {
+      width: auto;
+      max-width: 100%;
+      min-height: 44px;
+      padding: 6px 10px;
+      font-size: .875rem;
+      font-weight: 400;
+      border-radius: 6px;
+      background: transparent;
+      color: CanvasText;
+    }
+
   </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v19</span></h1>
+  <h1>Practice Recorder <span class="small">prototype v20</span></h1>
   <div class="text-size-controls" aria-label="Text size">
     <strong>Text size:</strong>
     <button class="text-size-btn" type="button" data-size="100" aria-pressed="true">Normal</button>
@@ -179,7 +191,7 @@
   <div class="mobile-tip">
     <b>What this recorder does</b>
     <div class="small" style="margin-top:6px;">
-      Sing with one learning track while the app records your voice, then compare your recording with a reference track.
+      <b>Practice and record using just one phone, tablet, or computer.</b> Listen to your learning track while recording your voice on the same device, then hear your recording together with the reference track to compare. No second device is needed.
     </div>
     <div class="small" style="margin-top:8px;">
       <b>Sing normally.</b> Phones, tablets, microphones, and browsers can add a small recording delay called latency.
@@ -212,8 +224,9 @@
   </div>
 
   <div class="card">
-    <p class="small">Your selected tracks are saved as local copies in this browser and restored next time. They are not uploaded. Use the same browser and device; private browsing or clearing browser data may remove them. To use updated originals, choose the files again.</p>
-    <button id="forgetFilesBtn" type="button">Forget saved files</button>
+    <p class="small">The recorder remembers your two practice tracks so you do not have to choose them each time. Use the same browser and device to find them here next time. Your tracks stay on your device and are not uploaded.</p>
+    <p id="removeTracksHelp" class="small">Most people can leave the button below alone. Use it if you do not want these two tracks to appear automatically next time. Your original music files are safe, and you can keep practicing with the tracks already open. To switch songs, use <b>Change file</b> instead.</p>
+    <button id="forgetFilesBtn" type="button" aria-describedby="removeTracksHelp">Remove remembered tracks</button>
     <p id="savedFilesNote" class="small" role="status" aria-live="polite"></p>
   </div>
 
@@ -288,8 +301,10 @@
     </div>
 
     <p class="small">
-      If your voice sounds <b>late</b>, move it <b>Earlier</b> (negative numbers).
-      If it sounds early, move it Later. Changes take effect immediately while Compare is playing.
+      <b>First time adjusting? Start at −100 ms:</b> tap Reset, then tap <b>← 100 ms</b> once.
+      Listen to your voice and the reference together. If your voice sounds late, use <b>← 100 ms</b> to move it earlier. If it sounds early, use <b>100 ms →</b> to move it later.
+      <b>Use 100 ms steps first. Only switch to 20 ms steps when the two are nearly synchronized</b> or a 100 ms step goes past the best match.
+      Changes take effect immediately while Compare is playing. If your saved timing already works, keep it. Sing normally while recording.
     </p>
 
     <label style="font-weight:600; margin-top:12px;">
@@ -597,10 +612,10 @@
     setFileBusy(true);
     try {
       await trackStorage('readwrite', store => store.clear());
-      savedFilesNote.textContent = 'Saved copies removed. Loaded tracks remain usable for this session. Choose files again to save them.';
+      savedFilesNote.textContent = 'These two tracks will no longer appear automatically next time. Your original music files have not been deleted. You can keep practicing now. To remember tracks again, use Change file to choose them again.';
     } catch (error) {
       console.warn(error);
-      savedFilesNote.textContent = 'Could not remove saved copies. Try again or clear this site’s data in browser settings.';
+      savedFilesNote.textContent = 'The recorder could not remove its remembered tracks. Please try this button again. Your original music files have not been changed.';
     } finally {
       setFileBusy(false);
     }
@@ -715,7 +730,7 @@
       return 'Microphone access was blocked for this website. In your browser’s website settings, set Microphone to Allow, reload the page, and try again.';
     }
     if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
-      return 'No microphone was found. Reconnect the microphone, confirm that iPadOS recognizes it, reload the page, and try again.';
+      return 'No microphone was found. Reconnect the microphone, confirm that your device recognizes it, reload the page, and try again.';
     }
     if (name === 'NotReadableError' || name === 'TrackStartError' || name === 'AbortError') {
       return 'The browser could not use the microphone. Close other apps or tabs using audio, reconnect the microphone, reload the page, and try again.';
