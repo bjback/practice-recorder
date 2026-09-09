@@ -4,6 +4,83 @@ The Practice Recorder helps you sing along with one learning track, record your 
 
 Your music and recording stay on your device. The recorder does not upload them.
 
+## Save the recorder link so you can find it next time
+
+A **bookmark** is a saved link. It opens the recorder again without searching for the original email or message. The Practice Recorder is a website you open in Chrome or Safari; you do not need to find it in an app store.
+
+**First, open the recorder page with the Record button.** If you are reading the web instructions, tap **Back to Practice Recorder** first. Save that page, rather than this instructions page or the chorus website. Use the same browser you use for practicing.
+
+Follow only the section for your browser and device. Button positions can vary by version. If a menu covers these instructions, finish that step and then return here.
+
+### Android phone or tablet — Chrome
+
+**Save it now:**
+
+1. With the recorder open in Chrome, tap **⋮** (the three dots beside the address bar).
+2. Tap the **star** or **Add to bookmarks**.
+3. To check the name, open **⋮ → Bookmarks**, find the new bookmark, and tap the three dots beside it, then **Edit**.
+4. Name it **Practice Recorder**. Note the folder shown, such as **Mobile bookmarks**, so you know where to look.
+
+**Find it next time:** Open **Chrome**, tap **⋮ → Bookmarks**, open that folder, and tap **Practice Recorder**. If you cannot see it, go back to the folder list or use the bookmark search.
+
+Google's [Android bookmark help](https://support.google.com/chrome/answer/188842?co=GENIE.Platform%3DAndroid&hl=en) shows the menu options.
+
+### iPhone or iPad — Chrome
+
+**Save it now:**
+
+1. With the recorder open in Chrome, tap **…** (the three dots).
+2. Tap **Add to Bookmarks**.
+3. Open **… → Bookmarks** and find the new bookmark. If necessary, open the folders listed there.
+4. Touch and hold the bookmark, then tap **Edit**.
+5. Name it **Practice Recorder**, note its folder, and tap **Done**.
+
+**Find it next time:** Open **Chrome**, tap **… → Bookmarks**, open the folder you noted, and tap **Practice Recorder**. Use the back arrow within Bookmarks if you need to see other folders.
+
+Google's [iPhone and iPad bookmark help](https://support.google.com/chrome/answer/188842?co=GENIE.Platform%3DiOS&hl=en) shows these steps.
+
+### iPhone or iPad — Safari
+
+**Save it now:**
+
+1. With the recorder open in Safari on iPhone, tap **…** and look for **Add Bookmark to**. If your layout has an open-book button instead, touch and hold it. On iPad, tap **Share** (a square with an arrow pointing upward).
+2. Choose **Add Bookmark to**, **Add Bookmark**, or **Add to Bookmarks**, depending on the choices shown.
+3. Name it **Practice Recorder**. Note the folder or location shown.
+4. Tap **Save**.
+
+**Find it next time:** Open **Safari**. On iPhone, tap **… → Bookmarks** or the open-book button, depending on your layout. On iPad, open the sidebar and select **Bookmarks**. Open the folder you noted and tap **Practice Recorder**.
+
+Apple provides bookmark help for [iPhone](https://support.apple.com/guide/iphone/iph42ab2f3a7/ios) and [iPad](https://support.apple.com/guide/ipad/ipadc602b75b/ipados).
+
+### Laptop or desktop computer — Chrome
+
+**Save it now:**
+
+1. With the recorder open in Chrome, click the **star** at the right end of the address bar.
+2. Name the bookmark **Practice Recorder**.
+3. Choose **Bookmarks bar** as its folder, then click **Done**.
+4. Click **⋮ → Bookmarks and lists → Show bookmarks bar** if the bar is not visible.
+
+**Find it next time:** Open **Chrome** and click **Practice Recorder** in the bookmarks bar below the address bar. If it is hidden at the end of the bar, click the overflow arrows to see more bookmarks.
+
+See Google's [computer bookmark help](https://support.google.com/chrome/answer/188842?co=GENIE.Platform%3DDesktop&hl=en).
+
+### Mac computer — Safari
+
+**Save it now:** With the recorder open, choose **Bookmarks → Add Bookmark** in the menu at the top of the screen. Select **Favorites**, name it **Practice Recorder**, and click **Add**.
+
+**Find it next time:** Open **Safari**, open the **Bookmarks** menu, and choose your **Practice Recorder** bookmark from Favorites.
+
+See Apple's [Safari Favorites help](https://support.apple.com/guide/safari/sfri22092/mac).
+
+### Try finding it once before you finish
+
+Before making a voice recording, open your browser's bookmarks and select **Practice Recorder**. Check that the recorder opens and you can see the **Record** button. This confirms that you saved the right page.
+
+If someone helps you save it, ask them to watch while **you** open it once. You can write down a reminder such as: **Chrome → three dots → Bookmarks → Mobile bookmarks → Practice Recorder**, using the folder you actually chose.
+
+Saving a bookmark saves the link only. It does not save your voice recording. Keep the original email or message as a backup.
+
 ## Make the words larger
 
 At the top of the recorder or the web version of this guide, choose one of these buttons:
@@ -41,7 +118,7 @@ The two tracks are usually:
 5. Open the recorder and use each **Choose file** button to select a track. In the file chooser, look for **Downloads**; you may need to tap **Browse** or the menu first.
 6. Tap **Record** and allow microphone access when asked.
 7. Keep the recorder visible and your phone unlocked while recording and processing. Avoid switching apps.
-8. Start with the ten-second test under **A good first test** before practicing a full song.
+8. Start with the 10–20 second test under **A good first test** before practicing a full song.
 
 The phone's speaker and microphone are a good starting option. If headphones or earbuds give poor results, try disconnecting them and using the phone's speaker and microphone. After changing headphones, stop and reopen the recorder, then make a new short recording and check **Voice timing** again. Reopening the recorder loses your current voice recording.
 
@@ -302,10 +379,10 @@ Tracks can disappear if you use private browsing, clear browser data, change bro
 
 Before practicing a full song:
 
-1. Choose two short practice tracks.
+1. Choose your two regular practice tracks. Full-length tracks are fine; you only need to record a short section.
 2. Set **Record from** to `0:00`.
-3. Record yourself speaking or singing loudly for about ten seconds.
-4. Stop the recording.
+3. Record yourself speaking or singing loudly for 10–20 seconds.
+4. Tap **Stop** after 10–20 seconds. You do not need to wait for the track to finish.
 5. Check the microphone-capture message.
 6. Set **Reference** to `0%`.
 7. Tap **Compare**.

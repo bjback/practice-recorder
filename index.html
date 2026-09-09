@@ -206,6 +206,7 @@
 
   <p class="sub">Sing against one learning track, then compare your recording with your part.</p>
   <p><a class="guide-link" href="user-guide.html">Instructions &amp; Help</a></p>
+  <p><b>Find the recorder easily next time:</b> save this page as a bookmark named <b>Practice Recorder</b>. <a href="user-guide.html#save-the-recorder-link">Show me how to save and reopen it.</a></p>
 
   <div class="card">
     <label for="againstFile">1. Track to sing against</label>
@@ -597,7 +598,7 @@
       }
       savedFilesNote.textContent = failed
         ? 'Some saved tracks could not be loaded. Choose those files again.'
-        : restored ? 'Saved tracks restored. You can choose different files above.'
+        : restored ? ''
         : 'Choose your tracks once; they will be remembered here.';
     } catch (error) {
       console.warn(error);
