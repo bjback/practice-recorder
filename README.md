@@ -70,7 +70,7 @@ Open [Instructions & Help](user-guide.html) for the web guide, or read [USER_GUI
 
 ## How to use
 
-1. Use earbuds or headphones if available to keep the learning track out of the microphone recording. They are recommended but not required.
+1. Make a short test with your device's speaker and microphone, or headphones or earbuds. Use whichever works better for you; headphones do not always give better results.
 2. Choose the **Track to sing against**, usually your part-missing track.
 3. Choose the **Track to compare with**, usually your solo or predominant-part track.
 4. Use **Record from** to choose a starting point, then press **Record** and allow microphone access when asked.

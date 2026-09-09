@@ -18,14 +18,14 @@ Your browser or device may also have its own text-size, page-zoom, and accessibi
 
 ## Before you begin
 
-You only need one phone, tablet, or computer. Headphones are helpful but optional.
+You only need one phone, tablet, or computer. Use the built-in speaker and microphone, or headphones or earbuds—whichever works better for you.
 
 You need:
 
 - A phone, tablet, or computer connected to the internet
 - The two practice-track files saved on your device
 
-Headphones, a headset, or earbuds are recommended but not required. They keep the backing track out of the microphone and make your recorded voice easier to compare. If you do not have them, use the device's speaker and built-in microphone. The microphone may capture some of the backing track, but you can still use the recorder.
+You can use your device's built-in speaker and microphone, or try headphones or earbuds. Results vary: some people get better recordings with the speaker and microphone. Headphones may reduce how much of the learning track is picked up, but they do not always give better results. Make a short test recording and use whichever setup works better for you.
 
 The two tracks are usually:
 
@@ -43,7 +43,7 @@ The two tracks are usually:
 7. Keep the recorder visible and your phone unlocked while recording and processing. Avoid switching apps.
 8. Start with the ten-second test under **A good first test** before practicing a full song.
 
-Headphones are optional. If you do not have them, use the phone's speaker and microphone. If Bluetooth headphones give you trouble, try wired headphones or the phone's speaker and microphone. After changing headphones, stop and reopen the recorder, then make a new short recording and check **Voice timing** again. Reopening the recorder loses your current voice recording.
+The phone's speaker and microphone are a good starting option. If headphones or earbuds give poor results, try disconnecting them and using the phone's speaker and microphone. After changing headphones, stop and reopen the recorder, then make a new short recording and check **Voice timing** again. Reopening the recorder loses your current voice recording.
 
 Tracks downloaded inside the Android HarmonySite app may be stored somewhere else; that location has not yet been confirmed. Downloading from the chorus website in Chrome gives you a simpler place to start looking.
 
@@ -74,13 +74,13 @@ Chrome and Edge users usually find downloads in **Downloads**. Safari users on a
 
 ### Other laptop users
 
-Download or locate the two tracks supplied by your choir, teacher, or other source. Open the Practice Recorder in your browser and select those files. A laptop's built-in microphone and speakers work; headphones usually provide a cleaner comparison.
+Download or locate the two tracks supplied by your choir, teacher, or other source. Open the Practice Recorder in your browser and select those files. Try the laptop's built-in microphone and speakers, or headphones, and use whichever gives you better results.
 
 ## If you are using an iPad
 
 Chrome is recommended. Safari may prevent you from changing the track volume while the microphone is active.
 
-If you have a wired or Bluetooth headset, connect it before opening the Practice Recorder:
+If you choose to use a wired or Bluetooth headset, connect it before opening the Practice Recorder:
 
 1. Connect your wired or Bluetooth earbuds or headset.
 2. Play some music and make sure you hear it through the earbuds or headset.
@@ -90,7 +90,7 @@ If you have a wired or Bluetooth headset, connect it before opening the Practice
 
 Keep the headset connected until you finish practicing. If you change or reconnect it, close and reopen the recorder before recording again.
 
-If you do not have a headset or earbuds, skip these connection steps and use the iPad's speaker and microphone.
+If you prefer the iPad's speaker and microphone, skip these connection steps.
 
 ## Allow microphone access
 
@@ -167,8 +167,8 @@ To select a different track, tap **Change file** under that track.
 
 ## Record your voice
 
-1. If you have earbuds or headphones, put them on and make sure the learning track plays through them.
-2. If you do not have them, leave the device speaker at a comfortable volume. The recorder will still work.
+1. Choose the setup that worked best in your short test: the built-in speaker and microphone, or headphones or earbuds.
+2. If using the speaker, set a comfortable volume. If using headphones or earbuds, check that you hear the learning track through them.
 3. To begin at the start of the song, leave **Record from** at `0:00`.
 4. To practice a later section, drag **Record from** to the desired starting time.
 5. Tap **Record**.
@@ -243,7 +243,7 @@ The recorder remembers your two practice tracks so they are ready when you come 
 
 Tap **Remove remembered tracks** only if you do not want these two tracks to appear automatically next time.
 
-- **Your original music files are not deleted.** They stay wherever you saved them on your phone, tablet, or computer.
+- Pressing **Remove remembered tracks** removes the copies this app remembers. **It does not delete the original music files from your phone, tablet, or computer.**
 - You can keep practicing with the tracks already open until you close or reload the recorder.
 - The next time you open the recorder, you will need to choose your two tracks again.
 - This button does not erase the voice recording you are currently comparing or change your saved timing correction.
@@ -291,7 +291,7 @@ This is a Safari/iPadOS limitation. Use Chrome on that iPad.
 2. Set **My voice** to `100%` or higher.
 3. Tap **Replay**.
 4. Read the microphone-capture message under **Compare**.
-5. If it reports little or no microphone sound, reconnect the headset and make a new test recording.
+5. If it reports little or no microphone sound, try the device's built-in microphone. If you are using a headset, check its connection or disconnect it, then make a new test recording.
 
 ### The remembered tracks disappeared
 

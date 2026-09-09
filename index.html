@@ -198,8 +198,8 @@
       If your voice does not line up during comparison, correct it afterward with <b>Voice timing</b>.
     </div>
     <div class="small" style="margin-top:8px;">
-      <b>Headphones or earbuds are recommended, but not required.</b>
-      They keep the backing track out of the microphone and make comparison clearer. Without them, the recorder still works, but the microphone may also pick up sound from your device's speaker.
+      <b>Use the speaker and microphone, or headphones or earbuds—whichever works better for you.</b>
+      Some people get better recordings with their device's built-in speaker and microphone. Try a short recording to find what works best for you.
     </div>
     <div id="mobileStatus" class="mobile-status small">Allow microphone access when asked.</div>
   </div>
@@ -225,14 +225,14 @@
 
   <div class="card">
     <p class="small">The recorder remembers your two practice tracks so you do not have to choose them each time. Use the same browser and device to find them here next time. Your tracks stay on your device and are not uploaded.</p>
-    <p id="removeTracksHelp" class="small">Most people can leave the button below alone. Use it if you do not want these two tracks to appear automatically next time. Your original music files are safe, and you can keep practicing with the tracks already open. To switch songs, use <b>Change file</b> instead.</p>
+    <p id="removeTracksHelp" class="small">Most people can leave the button below alone. Use it if you do not want these two tracks to appear automatically next time. Pressing <b>Remove remembered tracks</b> removes the copies this app remembers. It does not delete the original music files from your phone, tablet, or computer. To switch songs, use <b>Change file</b> instead.</p>
     <button id="forgetFilesBtn" type="button" aria-describedby="removeTracksHelp">Remove remembered tracks</button>
     <p id="savedFilesNote" class="small" role="status" aria-live="polite"></p>
   </div>
 
-  <div class="card warning">
-    <strong>For the clearest comparison, use headphones or earbuds if you have them.</strong>
-    <p class="small">They are optional. You can record through your device speaker, although the microphone may capture some of the backing track.</p>
+  <div class="card">
+    <strong>Start with a short test recording.</strong>
+    <p class="small">Your device's speaker and microphone are a good starting option. If you try headphones or earbuds and the results are worse, disconnect them and try the speaker and microphone again. Headphones may reduce how much of the learning track is picked up, but they do not always give better results.</p>
   </div>
 
   <div class="card">
@@ -770,7 +770,7 @@
       compareCard.classList.remove('hidden');
       const signal = measureRecordedSignal(recordedBuffer);
       recordingSignalNote.textContent = signal.isSilent
-        ? `Warning: the recording from ${activeMicName} contains little or no microphone sound. Reconnect the headset before opening the recorder, reload the page, and try again.`
+        ? `Warning: the recording from ${activeMicName} contains little or no microphone sound. Try speaking toward your device's built-in microphone. If you are using a headset, check its connection or disconnect it, then make a new test recording.`
         : `Microphone audio captured from ${activeMicName}. To hear it alone, set Reference to 0% before tapping Compare.`;
       seekSlider.max = String(compareBuffer.duration);
       seekSlider.step = '0.1';
