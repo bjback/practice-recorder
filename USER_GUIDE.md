@@ -381,12 +381,16 @@ Before practicing a full song:
 
 1. Choose your two regular practice tracks. Full-length tracks are fine; you only need to record a short section.
 2. Set **Record from** to `0:00`.
-3. Record yourself speaking or singing loudly for 10–20 seconds.
+3. Record yourself for 10–20 seconds. Speaking tests the microphone; singing along with the track tests both the microphone and timing.
 4. Tap **Stop** after 10–20 seconds. You do not need to wait for the track to finish.
 5. Check the microphone-capture message.
 6. Set **Reference** to `0%`.
 7. Tap **Compare**.
 8. Confirm that you hear your voice.
 9. Restore **Reference** to `100%` and compare both tracks together.
+
+If you sang along, use this test to make a first timing adjustment. If your voice sounds late, tap **← 100 ms** and listen. Repeat until nearly lined up, then use **← 20 ms** to fine-tune. If you go too far, use **20 ms →**. **Do not reset first.** You can refine the timing during your next practice recording.
+
+If your short section has no singing yet, use **“Record from”** to choose a section where you sing and make another short test.
 
 Once this test works, begin your normal practice session.
