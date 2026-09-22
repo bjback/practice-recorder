@@ -1,4 +1,10 @@
-# Practice Recorder v20
+# Practice Recorder V21
+
+## New in V21
+
+- Added a concise introduction and Short Version, including voice timing guidance.
+- Compacted loaded-track controls while keeping full filenames visible.
+- Collapsed extra options and clarified when to remove remembered tracks.
 
 ## New in v20
 
@@ -91,6 +97,7 @@ You can replay the same recording, pause/resume comparison, and move the playbac
 
 ## Update GitHub Pages
 
-Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype v20**.
+Upload `index.html`, `README.md`, `USER_GUIDE.md`, and `user-guide.html` to the repository's root on `main`, replacing files with the same names, and commit the changes. Keep the filenames unchanged. Once GitHub Pages finishes deploying, refresh the recorder and check that the heading says **prototype V21**.
 
 `README_v9.md`, if retained in the repository, is historical documentation; this README describes the current version.
+

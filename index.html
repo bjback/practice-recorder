@@ -177,66 +177,76 @@
       color: CanvasText;
     }
 
+  .wrap { padding: 0 0 24px; }
+  h1 { margin-top: 0; }
+  .intro { margin: 8px 0 12px; line-height: 1.45; }
+  summary { cursor: pointer; min-height: 44px; align-content: center; }
+  .quick-start > summary { font-weight: 700; }
+  .quick-start ol { margin: 0 0 12px; padding-left: 24px; }
+  .quick-start li { margin: 6px 0; line-height: 1.4; }
+  .help-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: baseline; }
+  .help-row > a { min-height: 44px; align-content: center; }
+  .text-size-controls button { width: auto; }
+  .track-card { padding: 12px; margin: 10px 0; }
+  .track-name { font-size: .92rem; font-weight: 400; overflow-wrap: anywhere; margin: 6px 0; }
+  .track-card.is-loaded .track-hint { display: none; }
+  .track-card.is-loaded button { width: auto; min-height: 44px; padding: 6px 10px; font-size: .875rem; }
+  .remembered-tracks { margin: 8px 0; }
+  .remembered-tracks > p { margin: 4px 0; }
+  #savedFilesNote:empty { display: none; }
   </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Practice Recorder <span class="small">prototype v20</span></h1>
+  <h1>Practice Recorder <span class="small">prototype V21</span></h1>
+  <p class="intro"><b>Hear how well you know your part.</b> Record yourself singing with a practice track, then listen to your voice alongside the correct part to hear what needs work—all on one device.</p>
+  <details class="quick-start" open>
+    <summary>The short version</summary>
+    <ol>
+      <li><b>Add two downloaded tracks:</b> your part missing to sing with, and your part alone to compare with.</li>
+      <li><b>Record and compare:</b> sing along, then listen to your recording together with your part.</li>
+      <li><b>Adjust timing if needed:</b> if your recorded voice sounds early or late, use <b>Voice timing</b> to line it up. Your setting is remembered for next time.</li>
+    </ol>
+  </details>
+  <div class="help-row">
+    <a href="user-guide.html">Instructions &amp; Help</a>
+    <details><summary>Text size</summary>
   <div class="text-size-controls" aria-label="Text size">
     <strong>Text size:</strong>
     <button class="text-size-btn" type="button" data-size="100" aria-pressed="true">Normal</button>
     <button class="text-size-btn" type="button" data-size="125" aria-pressed="false">Large</button>
     <button class="text-size-btn" type="button" data-size="150" aria-pressed="false">Extra Large</button>
   </div>
-  <div class="mobile-tip">
-    <b>What this recorder does</b>
-    <div class="small" style="margin-top:6px;">
-      <b>Practice and record using just one phone, tablet, or computer.</b> Listen to your learning track while recording your voice on the same device, then hear your recording together with the reference track to compare. No second device is needed.
-    </div>
-    <div class="small" style="margin-top:8px;">
-      <b>Sing normally.</b> Phones, tablets, microphones, and browsers can add a small recording delay called latency.
-      If your voice does not line up during comparison, correct it afterward with <b>Voice timing</b>.
-    </div>
-    <div class="small" style="margin-top:8px;">
-      <b>Use the speaker and microphone, or headphones or earbuds—whichever works better for you.</b>
-      Some people get better recordings with their device's built-in speaker and microphone. Try a short recording to find what works best for you.
-    </div>
-    <div id="mobileStatus" class="mobile-status small">Allow microphone access when asked.</div>
+
+    </details>
   </div>
-
-  <p class="sub">Sing against one learning track, then compare your recording with your part.</p>
-  <p><a class="guide-link" href="user-guide.html">Instructions &amp; Help</a></p>
-  <p><b>Find the recorder easily next time:</b> save this page as a bookmark named <b>Practice Recorder</b>. <a href="user-guide.html#save-the-recorder-link">Show me how to save and reopen it.</a></p>
-
-  <div class="card">
+  <div class="card track-card">
     <label for="againstFile">1. Track to sing against</label>
     <input id="againstFile" type="file" hidden accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
     <p id="againstFileName" class="track-name" aria-live="polite">No track loaded.</p>
     <button id="againstChooseBtn" type="button" aria-describedby="againstFileName">Choose file</button>
-    <p class="small">Usually your “part missing” track.</p>
+    <p class="small track-hint">Usually your “part missing” track.</p>
   </div>
 
-  <div class="card">
+  <div class="card track-card">
     <label for="compareFile">2. Track to compare with</label>
     <input id="compareFile" type="file" hidden accept=".mp3,.m4a,.aac,.wav,.aif,.aiff,.ogg,.oga,.webm,.mp4,audio/*" />
     <p id="compareFileName" class="track-name" aria-live="polite">No track loaded.</p>
     <button id="compareChooseBtn" type="button" aria-describedby="compareFileName">Choose file</button>
-    <p class="small">Usually your solo or predominant-part track.</p>
+    <p class="small track-hint">Usually your solo or predominant-part track.</p>
   </div>
 
-  <div class="card">
-    <p class="small">The recorder remembers your two practice tracks so you do not have to choose them each time. Use the same browser and device to find them here next time. Your tracks stay on your device and are not uploaded.</p>
-    <p id="removeTracksHelp" class="small">Most people can leave the button below alone. Use it if you do not want these two tracks to appear automatically next time. Pressing <b>Remove remembered tracks</b> removes the copies this app remembers. It does not delete the original music files from your phone, tablet, or computer. To switch songs, use <b>Change file</b> instead.</p>
-    <button id="forgetFilesBtn" type="button" aria-describedby="removeTracksHelp">Remove remembered tracks</button>
+  <div class="remembered-tracks">
+    <p class="small">Tracks you choose are remembered on this device.</p>
+    <details>
+      <summary>More options</summary>
+      <p id="removeTracksHelp" class="small">Most people will not need this button. Use <b>Remove remembered tracks</b> only if you do not want these tracks to appear automatically next time. Your original files are not deleted. To switch songs, use <b>Change file</b> instead. Tracks stay on this device, in this browser, and are not uploaded.</p>
+      <button id="forgetFilesBtn" type="button" aria-describedby="removeTracksHelp">Remove remembered tracks</button>
+    </details>
     <p id="savedFilesNote" class="small" role="status" aria-live="polite"></p>
   </div>
-
   <div class="card">
-    <strong>Start with a short test recording.</strong>
-    <p class="small">Results vary by device and headset. Make a short test recording with your device's speaker and microphone and, if available, with headphones or earbuds. Compare the recordings and use whichever setup gives you clearer results.</p>
-  </div>
-
-  <div class="card">
+    <div id="mobileStatus" class="small">Allow microphone access when asked.</div>
     <div class="sliderRow">
       <span>Record from</span>
       <input id="recordSeekSlider" type="range" min="0" max="1" step="0.1" value="0" disabled />
@@ -542,7 +552,8 @@
     } else {
       compareBuffer = buffer;
     }
-    trackNames[key].textContent = 'Loaded: ' + name;
+    trackNames[key].textContent = name;
+    trackNames[key].closest('.track-card').classList.add('is-loaded');
     chooseButtons[key].textContent = 'Change file';
   }
 
@@ -569,7 +580,7 @@
       console.warn(error);
       savedFilesNote.textContent = 'Could not load that audio file. Any previously loaded track is unchanged.';
     } finally {
-      // The separate Loaded label also represents tracks restored from storage.
+      // The filename also represents tracks restored from storage.
       input.value = '';
       setFileBusy(false);
     }
@@ -598,8 +609,7 @@
       }
       savedFilesNote.textContent = failed
         ? 'Some saved tracks could not be loaded. Choose those files again.'
-        : restored ? ''
-        : 'Choose your tracks once; they will be remembered here.';
+        : '';
     } catch (error) {
       console.warn(error);
       savedFilesNote.textContent = 'Saved files are unavailable in this browser mode. You can still choose files for this session.';
@@ -1145,3 +1155,6 @@
 </script>
 </body>
 </html>
+
+
+

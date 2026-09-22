@@ -1,4 +1,4 @@
-# Practice Recorder v20 — Step-by-Step Instructions
+# Practice Recorder V21 — Step-by-Step Instructions
 
 The Practice Recorder helps you sing along with one learning track, record your voice, and compare your recording with a second track.
 
@@ -161,7 +161,7 @@ These locations have been confirmed on an iPhone. They may be different on an iP
 2. Tap **Choose file**.
 3. Find the correct audio file on your device.
 4. Tap the file.
-5. Check that its name appears after **Loaded:**.
+5. Check that its full filename appears under the track heading.
 
 ### 2. Choose the track to compare with
 
@@ -169,7 +169,7 @@ These locations have been confirmed on an iPhone. They may be different on an iP
 2. Tap **Choose file**.
 3. Find the correct audio file on your device.
 4. Tap the file.
-5. Check that its name appears after **Loaded:**.
+5. Check that its full filename appears under the track heading.
 
 When both files have loaded, the recorder will say **Ready to record**.
 
@@ -329,3 +329,5 @@ If you sang along, use this test to make a first timing adjustment. If your voic
 If your short section has no singing yet, use **“Record from”** to choose a section where you sing and make another short test.
 
 Once this test works, begin your normal practice session.
+
+
